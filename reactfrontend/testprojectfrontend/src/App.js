@@ -1,17 +1,17 @@
-import logo from './logo.svg';
+
 import './App.css';
+import SERVER_PATH from './environment';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          I need to hook this up to the Express.js backend.
-        </p>
-        <br/>
-        <p>
-          Even though it's empty.
-          </p>
+        <p>(content)</p>
+        <form action={SERVER_PATH + "/addcontent"} method="POST">
+          <button type="submit">
+            add content
+          </button>
+        </form>
       </header>
     </div>
   );
