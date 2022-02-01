@@ -1,0 +1,1 @@
+// I am assuming this is how you write comments in TypeScript. 

@@ -1,0 +1,22 @@
+{
+  "name": "testproject",
+  "version": "1.0.0",
+  "description": "test project in new dev environment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "n/a"
+  },
+  "author": "jakew",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
