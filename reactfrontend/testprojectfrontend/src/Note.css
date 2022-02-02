@@ -1,0 +1,26 @@
+.note {
+    background-color: #FCFDAF;
+    width: 14em;
+    height: 14em;
+    margin: 1em;
+    box-shadow: 5px 3px 10px #000000;
+    position: relative;
+}
+
+.noteHotBar {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.noteHotBar > * {
+    background-color: rgb(88, 226, 173);
+    font-size: 0.8em;
+    min-width: 5em;
+}
