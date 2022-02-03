@@ -11,7 +11,7 @@ app.use(express.json());
 
 
 // to serve React files:
-app.use(express.static(path.join(__dirname, "../reactfrontend/testprojectfrontend", "build")));
+app.use(express.static(path.join(__dirname, "./reactfrontend/testprojectfrontend", "build")));
 app.use(express.static("public"));
 
 // use to allow cross-origin resource sharing during development:
@@ -27,7 +27,7 @@ const PORT = process.env.PORT || 5000;
 // });
 
 app.use((req, res, next) => {
-    res.sendFile(path.join(__dirname, "../reactfrontend/testprojectfrontend", "build", "index.html"));
+    res.sendFile(path.join(__dirname, "./reactfrontend/testprojectfrontend", "build", "index.html"));
 });
 
 app.post('/addcontent', (req, res) => {
