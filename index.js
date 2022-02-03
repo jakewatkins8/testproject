@@ -19,11 +19,15 @@ app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 
-app.get('/', (req, res) => {
-    // res.send({'response': 'here\'s a JSON response showing that a GET request to the \'/\' route was successfully received.'});
+// app.get('/', (req, res) => {
+//     // res.send({'response': 'here\'s a JSON response showing that a GET request to the \'/\' route was successfully received.'});
 
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+//     // res.sendFile(path.join(__dirname, "public", "index.html"));
 
+// });
+
+app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, "../reactfrontend/testprojectfrontend", "build", "index.html"));
 });
 
 app.post('/addcontent', (req, res) => {
