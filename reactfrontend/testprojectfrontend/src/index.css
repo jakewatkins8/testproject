@@ -12,6 +12,13 @@ body {
 body button {
 
   font-family: 'Outfit', sans-serif;
+
+  /* width: 100%; */
   
+}
+
+button:active {
+  background-color: #75ecbb !important;
+
 }
 
