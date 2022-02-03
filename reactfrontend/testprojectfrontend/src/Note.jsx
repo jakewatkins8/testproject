@@ -6,15 +6,29 @@ import "./Note.css";
 const Note = (props) => {
 
     const [isReadOnly, setIsReadOnly] = useState(true);
+    const [isFocused, setIsFocused] = useState(false);
     const [isNew, setIsNew] = useState(props.userCreated);
+    
+    const [toolTipDisplayed, setToolTipDisplayed] = useState(false);
 
     const activeTextArea = useRef();
 
     useEffect(() => {
         if (isNew) {
             setIsReadOnly(false);
+            setIsFocused(true);
         }
     }, []);
+
+
+    useEffect(() => handleDisplayTip(), [isFocused, isReadOnly]);
+
+    const handleSingleClick = (event) => {
+
+        setIsFocused(true);
+
+
+    };
 
     const handleEditClick = (event) => {
 
@@ -29,6 +43,8 @@ const Note = (props) => {
         setIsReadOnly(false);
 
         activeTextArea.current.focus();
+
+        setIsFocused(true);
         
 
     };
@@ -77,6 +93,35 @@ const Note = (props) => {
         if (isNew) {
             setIsNew(false);
         }
+
+        setIsFocused(false);
+    };
+
+    const handleDisplayTip = () => {
+
+        // use to pass state change before the state loop completes:
+        let displayed;
+
+        if (isFocused && isReadOnly) {
+            displayed = true;
+            setToolTipDisplayed(true);
+        }
+        else {
+            displayed = false;
+            setToolTipDisplayed(false);
+        }
+
+        // TODO - this param may get handed up BEFORE the state loop completes, and could then be wrong/behind.
+        // may have to use a backing state variable here to send instead, one that will
+        // update immediately.
+        // props.handleToolTip(toolTipDisplayed);
+
+        // trying w/ a separate pre-state update variable now:
+        props.handleToolTip(displayed);
+
+        // TODO - so, that does work.
+        // But it is proper practice in React?
+
     };
 
     return (
@@ -88,9 +133,14 @@ const Note = (props) => {
             <button onClick={handleEditClick} className="edit">edit</button>
             <button onClick={handleDeleteClick} className="delete">delete</button>
         </div>
-        <textarea autoFocus ref={activeTextArea} onBlur={handleBlur} readOnly={isReadOnly} defaultValue={props.content}
-        placeholder={isNew && "New note - start writing something..."}
+        <textarea onClick={handleSingleClick} onDoubleClick={handleEditClick} autoFocus ref={activeTextArea} onBlur={handleBlur} readOnly={isReadOnly} defaultValue={props.content}
+        placeholder={isNew ? "New note - start writing something..." : ""}
         style={ { backgroundColor: isReadOnly ? 'initial' : '#F8D862'} }/>
+        {/* {(isReadOnly && isFocused) && (<>
+        <button className="noteToolTipClose"><span>✕</span></button>
+        <p className="noteToolTip">(double click/double tap the text area to edit)</p>
+        </> 
+        )} */}
     </div>
     );
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import './App.css';
 import SERVER_PATH from './environment';
 
@@ -15,22 +15,49 @@ import { v4 as uuidV4 } from 'uuid';
 
 function App() {
 
-  // currently hardcoded to use first list of object literals from the parent array of arrays of objects:
+  // array to be used as a backing list for the "notes" state object, to help with keeping the
+  // note list data the same as the note list rendered.
+  // (currently hardcoded to load the first list of notes from notelists.js)
+  // TODO make currentList stateful after setting up basic user accounts, or similar.
   const currentList = notelists[0];
   console.log(currentList);
 
-  // trivial state object used to be updated with a response from the REST server:
+  // trivial state object that is used to test and confirm a state update when a response from the Express API server is received:
   const [contents, setContents] = useState("");
 
+  // state object to hold the state of the note objects being rendered:
   const [notes, setNotes] = useState(currentList.map(note => note.note));
 
+
+  const [info, setInfo] = useState("");
+
+
+
+  const [tipDisplayed, setTipDisplayed] = useState(false);
+
+  const handleEditToolTip = (displayed) => setTipDisplayed(displayed);
+
+
+
+  useEffect(() => {
+
+    if (tipDisplayed === true) {
+    setInfo('Double click/double tap a note\'s text area to edit it.');
+    } else {
+      setInfo('');
+    }
+
+  }, [tipDisplayed]);
+
+
+  // function stub to be used to query the backend and retrieve all of a given user profile's notes:
+  // TODO finish this functionality using a MongoDB instance (likely also using the Mongoose ORM)
   const loadUserProfile = (event) => {
 
     // suppress default page refresh behavior on Submit:
     event.preventDefault();
 
-    console.log('the add content button was pressed.');
-    fetch(SERVER_PATH + '/addcontent', {
+    fetch(SERVER_PATH + '/retrievenotes', {
       method: "POST",
       body: JSON.stringify({greeting: "hello"}),
       headers: {
@@ -93,21 +120,12 @@ function App() {
     console.log(`At app (top) level: Note with UUID ${noteKeyForDeletion} has been selected for deletion.`);
 
     console.log(notes);
+
     // locate the note with the correct UUID, and remove it from the list:
     setNotes(oldValue => {
       const list = [...oldValue];
 
       console.log(Object.keys(list));
-      // for (let listNote of list) {
-      //   console.log('listnote keys', Object.keys(listNote));
-      //   console.log(`${listNote} from the list of objects ${list}`);
-      //   console.log('list note Note Key:', listNote['noteKey']);
-      //   console.log('note key for deletion: ', noteKeyForDeletion);
-      //   if (listNote['noteObj']['noteKey'] === noteKeyForDeletion) {
-      //     console.log(`found note w/ matching UUID at position ${list.indexOf(listNote)}. Deleting now.`)
-      //     // list.splice(list.indexOf(listNote), 1);
-      //     break;
-      //   }
 
       const updatedList = list.filter((listItem, index) => {
         console.log(listItem['noteKey']);
@@ -117,6 +135,13 @@ function App() {
       
 
       console.log(updatedList);
+
+
+      // TODO - determine if I even actually need to use and keep this backing list to manage state of the notes list.
+      // update the backing array (currentList) to not include the deleted note:
+      // clear the list:
+      currentList.length = 0;
+      currentList.concat(updatedList); 
 
       // return a NEW array with the deleted value filtered out:
       return updatedList; 
@@ -147,11 +172,22 @@ function App() {
                 Load existing profile
             </button>
           </div>
+          <div className="infoBar">
+            <span className="infoI" style={ {opacity: tipDisplayed ? "1" : "0"} }></span>
+          <span className="noteToolTip">
+          {/* 
+          /* the X button to close the tool tip is mothballed below.
+          Likely need to get rid of it altogether. */}
+          {/* <button className="noteToolTipClose"><span>✕</span></button> */}
+          {info}
+          </span>
+          </div>
         </nav>
+        
       </header>
 
 
-      <NoteContainer editNote={noteEdit} deleteNote={noteDelete} notes={notes} />
+      <NoteContainer handleTipDisplay={handleEditToolTip} editNote={noteEdit} deleteNote={noteDelete} notes={notes} />
 
     </div>
   );

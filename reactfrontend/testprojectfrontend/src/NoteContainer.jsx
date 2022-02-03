@@ -1,9 +1,11 @@
+import { useState } from "react";
 import Note from "./Note.jsx";
 import "./NoteContainer.css";
 
 
 
 const NoteContainer = (props) => {
+
 
 
 const handleEditNote = (event) => {
@@ -21,10 +23,11 @@ const handleNoteInfo = (event) => {
     props.noteInfo(event);
 };
 
+const handleEditToolTip = displayed => {props.handleTipDisplay(displayed)};
+
 
 return (
     <div className="noteContainer">
-
         {props.notes.length === 0 && (<>
             <div className="noneMessage">
                 <p>
@@ -46,7 +49,8 @@ return (
             console.log(`note at index ${index}: key - ${note.noteKey}`);
 
           return (<Note content={note.note} key={note.noteKey} noteKey={note.noteKey}
-          editNote={handleEditNote} deleteNote={handleDeleteNote} userCreated={note.userCreated} noteInfo={handleNoteInfo} />);
+          editNote={handleEditNote} deleteNote={handleDeleteNote} 
+          handleToolTip={handleEditToolTip} userCreated={note.userCreated} noteInfo={handleNoteInfo} />);
         })
         }
 
