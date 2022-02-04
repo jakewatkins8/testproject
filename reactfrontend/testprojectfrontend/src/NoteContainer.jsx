@@ -39,7 +39,7 @@ return (
                     Select "Add new note" above to start a new note.
                 </p>
 
-                <img class="notesImg" src={`${process.env.PUBLIC_URL}/assets/notes.png`} />
+                <img className="notesImg" src={`${process.env.PUBLIC_URL}/assets/notes.png`} />
                 
             </div>
         </>)}

@@ -1,0 +1,10 @@
+
+
+.modalBackgroundDimmer {
+    top: 0;
+    position: absolute;
+    width: 200vw;
+    height: 200vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 500;
+}

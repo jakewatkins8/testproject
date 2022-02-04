@@ -12,12 +12,17 @@ import notelists from "./notelists.js";
 import { v4 as uuidV4 } from 'uuid';
 
 
-import TypeScriptVersion from "./TypeScriptVersion.tsx";
-import { HashRouter, NavLink, Route, Routes } from "react-router-dom";
+// not currently using any routing:
+// import { HashRouter, NavLink, Route, Routes } from "react-router-dom";
+
+
+import ProfileModal from "./ProfileModal.tsx";
+import ModalBackgroundDim from "./ModalBackgroundDim.jsx";
 
 
 
-function App() {
+
+function App(props) {
 
   // array to be used as a backing list for the "notes" state object, to help with keeping the
   // note list data the same as the note list rendered.
@@ -42,6 +47,9 @@ function App() {
   const handleEditToolTip = (displayed) => setTipDisplayed(displayed);
 
 
+  const [profileModalActive, setProfileModalActive] = useState(false);
+
+
 
   useEffect(() => {
 
@@ -60,6 +68,11 @@ function App() {
 
     // suppress default page refresh behavior on Submit:
     event.preventDefault();
+
+
+    // activate the profile select modal:
+    setProfileModalActive(true);
+
 
     fetch(SERVER_PATH + '/retrievenotes', {
       method: "POST",
@@ -156,6 +169,11 @@ function App() {
 
   return (
     <div className="App">
+
+            
+      {profileModalActive && <ModalBackgroundDim/>}
+
+      <div className="appWindow">
       <header className="App-header">
 
         <div className="titleNote">
@@ -196,13 +214,12 @@ function App() {
 
       <NoteContainer handleTipDisplay={handleEditToolTip} editNote={noteEdit} deleteNote={noteDelete} notes={notes} />
 
-{/* disused pieces of a different route for a potential TypeScript workup of this project  */}
-      {/* <HashRouter> */}
-      {/* <NavLink to="/ts">typescript version</NavLink> */}
-      {/* <Routes>
-              <Route path="/ts" element={<TypeScriptVersion/>} />
-            </Routes>
-          </HashRouter> */}
+
+      {profileModalActive && <ProfileModal/>}
+
+
+
+      </div>
 
     </div>
   );
