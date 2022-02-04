@@ -2,6 +2,10 @@ import { useState } from "react";
 import Note from "./Note.jsx";
 import "./NoteContainer.css";
 
+import { PUBLIC_URL } from "./environment.js";
+
+
+
 
 
 const NoteContainer = (props) => {
@@ -34,11 +38,8 @@ return (
                     No notes added yet. <br/>
                     Select "Add new note" above to start a new note.
                 </p>
-                <p className="unicodeIcons">
-                    &#8852;
 
-                    <span className="icon">✄</span>
-                </p>
+                <img class="notesImg" src={`${process.env.PUBLIC_URL}/assets/notes.png`} />
                 
             </div>
         </>)}

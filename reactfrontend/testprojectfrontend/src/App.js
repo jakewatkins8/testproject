@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import './App.css';
-import SERVER_PATH from './environment';
+import { SERVER_PATH } from './environment';
 
 import Note from "./Note.jsx";
 import NoteContainer from "./NoteContainer.jsx";
@@ -10,6 +10,10 @@ import notelists from "./notelists.js";
 
 // use UUID for list item keys (note keys):
 import { v4 as uuidV4 } from 'uuid';
+
+
+import TypeScriptVersion from "./TypeScriptVersion.tsx";
+import { HashRouter, NavLink, Route, Routes } from "react-router-dom";
 
 
 
@@ -166,12 +170,15 @@ function App() {
           <div className="userInfo">
             <p>Current user profile: User1</p>
           </div>
-          <div className="hotBar"> 
-            <button onClick={addNewNote}>New note</button>
-            <button onClick={loadUserProfile} type="submit">
-                Load existing profile
-            </button>
-          </div>
+ 
+            <div className="hotBar"> 
+              <button onClick={addNewNote}>New note</button>
+              <button onClick={loadUserProfile} type="submit">
+                  Load existing profile
+              </button>
+
+            </div>
+
           <div className="infoBar">
             <span className="infoI" style={ {opacity: tipDisplayed ? "1" : "0"} }></span>
           <span className="noteToolTip">
@@ -188,6 +195,14 @@ function App() {
 
 
       <NoteContainer handleTipDisplay={handleEditToolTip} editNote={noteEdit} deleteNote={noteDelete} notes={notes} />
+
+{/* disused pieces of a different route for a potential TypeScript workup of this project  */}
+      {/* <HashRouter> */}
+      {/* <NavLink to="/ts">typescript version</NavLink> */}
+      {/* <Routes>
+              <Route path="/ts" element={<TypeScriptVersion/>} />
+            </Routes>
+          </HashRouter> */}
 
     </div>
   );
