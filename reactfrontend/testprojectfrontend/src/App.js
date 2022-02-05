@@ -6,7 +6,8 @@ import Note from "./Note.jsx";
 import NoteContainer from "./NoteContainer.jsx";
 
 // arrays of text that act as lists of notes:
-import notelists from "./notelists.js";
+import noteLists from "./notelists.js";
+import { findListByUser } from "./notelists.js";
 
 // use UUID for list item keys (note keys):
 import { v4 as uuidV4 } from 'uuid';
@@ -22,20 +23,14 @@ import ModalBackgroundDim from "./ModalBackgroundDim.jsx";
 
 
 
-function App(props) {
+function App() {
 
-  // array to be used as a backing list for the "notes" state object, to help with keeping the
-  // note list data the same as the note list rendered.
-  // (currently hardcoded to load the first list of notes from notelists.js)
-  // TODO make currentList stateful after setting up basic user accounts, or similar.
-  const currentList = notelists[0];
-  console.log(currentList);
+
 
   // trivial state object that is used to test and confirm a state update when a response from the Express API server is received:
   const [contents, setContents] = useState("");
 
-  // state object to hold the state of the note objects being rendered:
-  const [notes, setNotes] = useState(currentList.map(note => note.note));
+
 
 
   const [info, setInfo] = useState("");
@@ -51,15 +46,64 @@ function App(props) {
 
 
 
+  // TODO: below, for now: maybe use State - BUT, to maintain auth context for anything else that is finer grain:
+  // need to use a context/state mgmt solution like Redux or React Context API (useContext)
+  // using State here because the implementation of a context solution is important, but not
+  // the main point of this part of the project. 
+  // The objectives are to practice writing TypeScript, and set up communication with a Mongo database.
+  const [currentUserName, setCurrentUserName] = useState("dog_walker");
+
+  const getCurrentUserName = () => currentUserName;
+
+  // array to be used as a backing list for the "notes" state object, to help with keeping the
+  // note list data the same as the note list rendered.
+  // (currently hardcoded to load the first list of notes from notelists.js)
+  // TODO make currentList stateful after setting up basic user accounts, or similar.
+  
+  // currently this is hard coded. TODO <----
+  // let currentList = [];
+  // console.log(currentList);
+
+  // state object to hold the state of the note objects being rendered:
+  const [notes, setNotes] = useState([]);
+
+
+
+const [debugData, setDebugData] = useState("");
+
+
+
+    
+
+// TODO -> the special TypeScript types that behave like enums seem like a good use case for the Info state object's possible values.
+
+
   useEffect(() => {
 
     if (tipDisplayed === true) {
     setInfo('Double click/double tap a note\'s text area to edit it.');
     } else {
-      setInfo('');
+      // does nothing now.
     }
 
   }, [tipDisplayed]);
+
+
+
+  // runs useEffect when current user name changes (and when component first loads?) to find the correct list for the user
+  useEffect(() => {
+
+
+    // calls the lookup method in noteslist.js to locate the current username's collection of notes: 
+    let list = findListByUser(currentUserName);
+
+    console.log(list);
+
+    // having obtained the 2D array/object of "rows" of list objects for the current user,
+    // sets state of the notes object as the 2D collection:
+    setNotes(list);
+
+  }, [currentUserName]);
 
 
   // function stub to be used to query the backend and retrieve all of a given user profile's notes:
@@ -73,56 +117,61 @@ function App(props) {
     // activate the profile select modal:
     setProfileModalActive(true);
 
+// TODO -> finish the REST version reaching into Mongo
 
-    fetch(SERVER_PATH + '/retrievenotes', {
-      method: "POST",
-      body: JSON.stringify({greeting: "hello"}),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => {
-      console.log('response received.');
-      console.log(res);
-      if (res.ok) {
-        return res.json();
-      }
-      else {
-        setContents('Something went wrong with receiving content from the server.');
-      }
-    }).then(data => {
-      console.log('the res from the backend was ok.');
-      let dataStr = data['responsefromserver'];
-      console.log(dataStr);
-      setContents(dataStr);
-    }).catch(error => {
-      console.log('caught the following error:', error);
-    });
+    // fetch(SERVER_PATH + '/retrievenotes', {
+    //   method: "POST",
+    //   body: JSON.stringify({greeting: "hello"}),
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // }).then(res => {
+    //   console.log('response received.');
+    //   console.log(res);
+    //   if (res.ok) {
+    //     return res.json();
+    //   }
+    //   else {
+    //     setContents('Something went wrong with receiving content from the server.');
+    //   }
+    // }).then(data => {
+    //   console.log('the res from the backend was ok.');
+    //   let dataStr = data['responsefromserver'];
+    //   console.log(dataStr);
+    //   setContents(dataStr);
+    // }).catch(error => {
+    //   console.log('caught the following error:', error);
+    // });
+
+   
   };  
 
   const addNewNote = () => {
 
-    if (notes.length === 10) {
-      // max reached.
-      return;
-    }
+    // if (Object.keys(notes).length === 10) {
+    //   // max reached.
+    //   return;
+    // }
 
-    let noteObj = {
+    const createDate = new Date(); 
+
+    let noteRowObj = {
         note: ``, 
         noteKey: uuidV4(), 
-        dateCreated: Date.now(),
-        dateModified: Date.now(),
+        dateCreated: Date(createDate),
+        dateModified: Date(createDate),
         userCreated: true
     };
-    
-    currentList.push(noteObj);
 
-    console.log('curList', currentList);
+    console.log('new note data:');
+    console.log(Object.entries(noteRowObj));
+    
+    // currentList.push(noteObj);
+
+    // console.log('curList', currentList);
     console.log('notes:', notes);
 
-    setNotes(oldValue => {
-      return ([...oldValue, noteObj]);
-    });
-
+    setNotes(oldValue => [...oldValue, noteRowObj]);
   };
 
   const noteEdit = (event) => {
@@ -153,25 +202,42 @@ function App(props) {
 
       console.log(updatedList);
 
-
-      // TODO - determine if I even actually need to use and keep this backing list to manage state of the notes list.
-      // update the backing array (currentList) to not include the deleted note:
-      // clear the list:
-      currentList.length = 0;
-      currentList.concat(updatedList); 
-
       // return a NEW array with the deleted value filtered out:
       return updatedList; 
     });
 
   };
 
+  const handleModalBgClick = () => {
+
+    console.log('closing modal due to bg being clicked');
+    setProfileModalActive(false);
+  };
+
+
+
+  const handleModalClosed = (event) => {
+
+    console.log(`received from the modal close button: ${event.target}`);
+    setProfileModalActive(false);
+  }
+
+
+  const handleSelectedUser = (userName) => {
+    // close modal:
+    setProfileModalActive(false);
+
+    console.log(`${userName} has been selected.`);
+
+    setCurrentUserName(userName);
+    
+  };
+
 
   return (
     <div className="App">
 
-            
-      {profileModalActive && <ModalBackgroundDim/>}
+      {profileModalActive && <ModalBackgroundDim onModalBgClicked={handleModalBgClick}/>}
 
       <div className="appWindow">
       <header className="App-header">
@@ -180,13 +246,10 @@ function App(props) {
           <div className="titleTop">
             <p>Notes</p>
           </div>
-          <div className="titleBottom">
-
-          </div>
         </div>
         <nav className="navColumn">
           <div className="userInfo">
-            <p>Current user profile: User1</p>
+            <p>Current user profile: {currentUserName}</p>
           </div>
  
             <div className="hotBar"> 
@@ -198,29 +261,33 @@ function App(props) {
             </div>
 
           <div className="infoBar">
-            <span className="infoI" style={ {opacity: tipDisplayed ? "1" : "0"} }></span>
-          <span className="noteToolTip">
-          {/* 
-          /* the X button to close the tool tip is mothballed below.
-          Likely need to get rid of it altogether. */}
-          {/* <button className="noteToolTipClose"><span>✕</span></button> */}
+            <span className="infoI" style={ {opacity: tipDisplayed ? '1' : '0'} }>
+              <span className="infoI_letter">i</span>
+            </span>
+          <span className="noteToolTip" style={ {opacity: tipDisplayed ? '1' : '0'} }>
           {info}
           </span>
           </div>
         </nav>
         
+        
       </header>
 
 
-      <NoteContainer handleTipDisplay={handleEditToolTip} editNote={noteEdit} deleteNote={noteDelete} notes={notes} />
+      <NoteContainer handleTipDisplay={handleEditToolTip} editNote={noteEdit} deleteNote={noteDelete} notes={notes}/>
 
 
-      {profileModalActive && <ProfileModal/>}
+      {profileModalActive && <ProfileModal modalClosed={handleModalClosed} selectedUser={handleSelectedUser} currentUser={currentUserName}/>}
 
 
 
       </div>
 
+{/* DEBUG: */}
+      {/* <p style={ {backgroundColor: 'maroon', color: 'white', fontSize: '10px'}}>DEBUG object data: <br/> {debugData}</p>
+      
+      <p style={ {backgroundColor: 'black', color: 'white' }}>DEBUG object data: <br/> {JSON.stringify(notes)}</p> */}
+    
     </div>
   );
 }

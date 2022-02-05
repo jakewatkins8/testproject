@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Note from "./Note.jsx";
 import "./NoteContainer.css";
 
@@ -11,6 +11,7 @@ import { PUBLIC_URL } from "./environment.js";
 const NoteContainer = (props) => {
 
 
+useEffect(() => {}, [props.notes]);
 
 const handleEditNote = (event) => {
     console.log(`noteContainer level: note assoc. w/ ${event.noteId} has been selected for editing`);
@@ -31,8 +32,11 @@ const handleEditToolTip = displayed => {props.handleTipDisplay(displayed)};
 
 
 return (
+    
     <div className="noteContainer">
-        {props.notes.length === 0 && (<>
+        {/* below statement is debug; I think the notes may be unmounting early? */}
+        {console.log(Object.keys(props.notes), Object.keys(props.notes).length)}
+        {Object.keys(props.notes).length === 0 && (<>
             <div className="noneMessage">
                 <p>
                     No notes added yet. <br/>
@@ -47,17 +51,17 @@ return (
         
         {
         props.notes.map((note, index) => {
-            console.log(`note at index ${index}: key - ${note.noteKey}`);
 
-          return (<Note content={note.note} key={note.noteKey} noteKey={note.noteKey}
+        // drill down one array level into the note object:
+        const noteData = note;
+
+          return (<Note content={noteData.note} key={noteData.noteKey} noteKey={noteData.noteKey}
           editNote={handleEditNote} deleteNote={handleDeleteNote} 
-          handleToolTip={handleEditToolTip} userCreated={note.userCreated} noteInfo={handleNoteInfo} />);
+          handleToolTip={handleEditToolTip} noteInfo={handleNoteInfo} />);
         })
         }
 
-{/* dummy data for mockup */}
-    {/* <Note content="Exercise" /> <Note content="Game Friday, 7:00 PM "/> <Note content="Update notes app" /> 
-    <Note content="Finish notes app" /> <Note content="Learn from the project" /> */}
+ 
         
     </div>
 );

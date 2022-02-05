@@ -21,11 +21,16 @@ const Note = (props) => {
     }, []);
 
 
-    useEffect(() => handleDisplayTip(), [isFocused, isReadOnly]);
+    // useEffect(() => handleDisplayTip(), [isFocused, isReadOnly]);
 
     const handleSingleClick = (event) => {
 
-        setIsFocused(true);
+        if (!isFocused) {
+            handleEditClick(event);
+        }
+
+        setToolTipDisplayed(false);
+        handleHideTip(false);
 
 
     };
@@ -97,30 +102,24 @@ const Note = (props) => {
         setIsFocused(false);
     };
 
-    const handleDisplayTip = () => {
+    let toolTipAppearTimer;
 
-        // use to pass state change before the state loop completes:
-        let displayed;
+    const handleShowTip = (event) => {
 
-        if (isFocused && isReadOnly) {
-            displayed = true;
-            setToolTipDisplayed(true);
-        }
-        else {
-            displayed = false;
-            setToolTipDisplayed(false);
-        }
+        toolTipAppearTimer = setTimeout(() => {
+            props.handleToolTip(true);
+            setToolTipDisplayed(true);    
+        }, 500);
 
-        // TODO - this param may get handed up BEFORE the state loop completes, and could then be wrong/behind.
-        // may have to use a backing state variable here to send instead, one that will
-        // update immediately.
-        // props.handleToolTip(toolTipDisplayed);
+    };
 
-        // trying w/ a separate pre-state update variable now:
-        props.handleToolTip(displayed);
+    
+    const handleHideTip = (event) => {
 
-        // TODO - so, that does work.
-        // But it is proper practice in React?
+        clearTimeout(toolTipAppearTimer);
+        
+        props.handleToolTip(false);
+        setToolTipDisplayed(false);
 
     };
 
@@ -133,9 +132,9 @@ const Note = (props) => {
             <button onClick={handleEditClick} className="edit">edit</button>
             <button onClick={handleDeleteClick} className="delete">delete</button>
         </div>
-        <textarea onClick={handleSingleClick} onDoubleClick={handleEditClick} autoFocus ref={activeTextArea} onBlur={handleBlur} readOnly={isReadOnly} defaultValue={props.content}
+        <textarea onMouseEnter={handleShowTip} onMouseLeave={handleHideTip} onClick={handleSingleClick} autoFocus ref={activeTextArea} onBlur={handleBlur} readOnly={isReadOnly} defaultValue={props.content}
         placeholder={isNew ? "New note - start writing something..." : ""}
-        style={ { backgroundColor: isReadOnly ? 'initial' : '#F8D862'} }/>
+        style={ { backgroundColor: isFocused && '#F8D862'} } />
         {/* {(isReadOnly && isFocused) && (<>
         <button className="noteToolTipClose"><span>✕</span></button>
         <p className="noteToolTip">(double click/double tap the text area to edit)</p>

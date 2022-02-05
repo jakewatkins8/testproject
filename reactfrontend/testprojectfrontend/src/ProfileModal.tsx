@@ -1,4 +1,6 @@
+import { process_params } from "express/lib/router";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 
 import "./ProfileModal.css";
@@ -8,9 +10,9 @@ interface ProfileModal {
 }
 
 
-const ProfileModal = (prop: { currentUser : string }) => {
+const ProfileModal = (prop: { currentUser : string, modalClosed: Function, selectedUser: Function }) => {
 
-    const users = [] as Array<String>;
+    const [users, setUsers] = useState([]);
     
     useEffect(() => getUserList(), []);
 
@@ -26,32 +28,41 @@ const ProfileModal = (prop: { currentUser : string }) => {
 // TODO -> change to actually query DB
 // dummy data:
         const usersFromDb = [
-            [{'username': 'user 1'}], 
-            [{'username': 'user 2'}], 
-            [{'username': 'user 3'}]
+            [{'username': 'dog_walker'}], 
+            [{'username': 'cat_sitter'}], 
+            [{'username': 'software_engr'}]
     ];
 
-        users.concat(usersFromDb.map(row => row['username']));
+        setUsers(() => usersFromDb.map(row => row[0]['username']));
 
         console.log('Users array, after DB request:', users);
     };
 
-
+    // TODO TSX - type of event?
     // method to receive which user was selected:
-    const handleLoadUserSelect = (event) => {};
+    const handleLoadUserSelect = (event) => {
+
+        prop.selectedUser(event.target.name);
+    };
+
+    // TODO TSX - type of event?
+    const handleModalClose = (event) => {
+        // TODO TSX - how to pass up either the event or the boolean value correctly?
+        prop.modalClosed(event);
+    };
 
     // method to request a given user's notes from MongoDB via the Express REST API
     const requestUserNotes = () => {};
 
     return (
         <div className="profileModal">
-            <div className="modalClose">
+            <button onClick={handleModalClose} className="modalClose">
                 <span>✕</span>
-            </div>
+            </button>
             <p>Select a user profile to load from the list below.</p>
             <ol>
-                {users.map(userName => <li>
-                                        <button onClick={handleLoadUserSelect}>
+                {users.map(userName => <li key={uuidv4()}>
+                                        <button name={userName} onClick={handleLoadUserSelect}>
                                             {userName}
                                         </button>
                                     </li>)}
