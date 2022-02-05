@@ -11,6 +11,13 @@ const Note = (props) => {
     
     const [toolTipDisplayed, setToolTipDisplayed] = useState(false);
 
+    const [moveMode, setMoveMode] = useState(false);
+
+    // boolean flag state object to trigger a deleted animation:
+    const [deletedAnim, setDeletedAnim] = useState(false);
+
+
+    
     const activeTextArea = useRef();
 
     useEffect(() => {
@@ -21,13 +28,24 @@ const Note = (props) => {
     }, []);
 
 
-    // useEffect(() => handleDisplayTip(), [isFocused, isReadOnly]);
+    const deleteNoteStyle = {
+        opacity: 0,
+        width: '0px',
+        height: '0px',
+        margin: '0',
+        padding: '0'
+    };
+
+
 
     const handleClick = (event) => {
 
-        if (!isFocused) {
-            handleEditClick(event);
-        }
+        // if (!isFocused) {
+        //     handleEditClick(event);
+        // }
+
+        handleEditClick(event);
+
 
         setToolTipDisplayed(false);
         handleHideTip(false);
@@ -45,7 +63,6 @@ const Note = (props) => {
         // and pass event up the component chain:
         props.editNote(event);
 
-        // setIsReadOnly(false);
 
         activeTextArea.current.focus();
 
@@ -61,8 +78,18 @@ const Note = (props) => {
 
         console.log('delete handler at note level:', event.target, 'noteId for event', event.noteId);
 
+
+
+        // trigger a CSS 'deleted' animation:
+        setDeletedAnim(true);
+
+        
+
+        setTimeout(() => props.deleteNote(event), 400);
+
+
         // and pass event up the component chain:
-        props.deleteNote(event);
+        // props.deleteNote(event);
 
     };
 
@@ -123,25 +150,30 @@ const Note = (props) => {
 
     };
 
+    const focusStyle = {
+        backgroundColor: '#F8D862',
+        // alignSelf: 'flex-end',
+        top: '10px',
+        borderRadius: '20px 20px 0 0',
+        borderBottom: '2px dotted black'
+        
+    };
+
+
+
     return (
-    <div className="note">
-        <div className="infoButton">
-            <button onClick={handleInfoClick}>i</button>
-        </div>
-        <div className="noteHotBar">
-            <button onClick={handleEditClick} className="edit" style={ {backgroundColor: isFocused ? '#75ecbb' : '' }}>edit</button>
+    <div style={deletedAnim ? deleteNoteStyle : {}} className="note">
+        {!deletedAnim && 
+            <div className="noteHotBar">
+            <button onClick={handleInfoClick}>info</button>
+            <button onClick={handleEditClick} className="edit" style={ isFocused ? focusStyle : {} }>edit</button>
             <button onClick={handleDeleteClick} className="delete">delete</button>
-        </div>
+            </div>
+        }
         <textarea onMouseEnter={handleShowTip} onMouseLeave={handleHideTip} onClick={handleClick} onTouchStart={handleEditClick} ref={activeTextArea} onBlur={handleBlur} defaultValue={props.content}
-        placeholder={isNew ? "New note - start writing something..." : ""}
+        placeholder={isNew ? "New note - start writing something..." : ""} 
         style={ { backgroundColor: isFocused && '#F8D862'} } />
-        {/* {(isReadOnly && isFocused) && (<>
-        <button className="noteToolTipClose"><span>✕</span></button>
-        <p className="noteToolTip">(double click/double tap the text area to edit)</p>
-        </> 
-        )} */}
-        {/* tags removed from textarea - changing the edit workflow: */}
-        {/* readOnly={isReadOnly}  */}
+
     </div>
     );
 

@@ -10,6 +10,11 @@
     flex-flow: column nowrap;
     justify-content: flex-end;
     align-items: center;
+
+    z-index: 600;
+
+
+    transition: 0.5s;
 }
 
 .note textarea {
@@ -20,12 +25,7 @@
     font-size: 1.2em;
     margin-bottom: 1em;
     resize: none;
-    /* appearance tags do not seem to work. */
-    /* appearance: none !important; */
-    /* -webkit-appearance: none !important; */
-
     background-color: transparent;
-    border: none;
     border: dotted 2px rgba(0,0,0,0.3);
     border-color: transparent;
     border-top: rgba(0,0,0,0.3);
@@ -35,37 +35,30 @@
 .note textarea:focus {
     outline: none;
     border: dotted 2px rgba(0,0,0,0.8);
-    /* background-color: #F8D862; */
-
-    /* transition: 0.2s; */
 }
 
 .note textarea:not(:focus):hover {
     cursor: pointer;
     background-color: rgb(255, 234, 164) !important;
-
-    /* transition: 0.2s; */
-  }
+}
 
 .note textarea:focus:active {
 cursor: pointer;
 background-color: rgb(255, 234, 164) !important;
-
-/* transition: 0.2s; */
 }
 
-.infoButton {
+/* .infoButton {
 position: absolute;
-top: -2px;
-left: -1px;
+top: 0px;
+left: 0px;
 width: 34px;
-height: 34px;
+height: 34px; */
 /* background-color: purple; */
-
+/* 
 opacity: 0.8;
-}
+} */
 
-.infoButton > * {
+/* .infoButton > * {
 
     position: absolute;
     border: 2px solid black;
@@ -80,35 +73,124 @@ opacity: 0.8;
     justify-content: center;
     align-items: center;
 
-    font-size: 1em;
+    font-size: 0.8em;
 }
   
 .infoButton > *:hover {
     background-color: #00ffcc;
 
+} */
+
+
+.note .edit {
+    /* position: relative;
+    top: 10px; */
+    transition: 250ms;
+    transition-timing-function: ease;
 }
 
 .noteHotBar {
     position: absolute;
-    right: 0;
     top: 0;
-
+    
+    /* padding: 0 0.2em 0 0.2em; */
 
     display: flex;
     flex-flow: row nowrap;
-    justify-content: flex-end;
+    justify-content: space-between !important;
     align-items: center;
+
+    height: 22%;
+    width: 96%;
+    /* background-color: yellow; */
 }
 
-.noteHotBar > * {
+.noteHotBar button {
+
+    margin: 0;
+    padding: 0.5em 0 0.5em 0;
+
     background-color: rgb(88, 226, 173);
     font-size: 0.8em;
-    min-width: 5em;
 
     opacity: 0.8;
+
+    min-width: 30%;
+
+
 
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
+
+
+
+}
+
+/* .note {
+    animation: noteSettle 0.1s forwards ease-in;
+}
+
+@keyframes noteSettle {
+
+    0% {
+
+        transform: scale(1.0) translateY(0px);
+
+    }
+    50% {
+        transform: scale(0.98) translateY(1px);
+    }
+    100% {
+        transform: scale(1.0) translateY(-1px);
+    }
+
+} */
+
+@media screen and (max-width: 470px) {
+    
+    .note {
+        width: 9em;
+        height: 9em;
+
+        transition: 0.4s;
+    }
+
+    .noteHotBar button {
+
+        border-radius: 10px;
+
+
+        margin-top: 6px;
+        height: 2em;
+        /* height: 100%; */
+        padding: 0.0em 0 0.0em 0;
+    }
+
+    .noteHotBar {
+        height: 17%;
+    }
+
+    .note textarea {
+        position: relative;
+        width: 88%;
+        font-family: inherit;
+        height: 55%;
+        font-size: 0.9em;
+    }
+
+    .noteHotBar > * {
+        background-color: rgb(88, 226, 173);
+        font-size: 0.8em;
+        /* min-width: 5em; */
+    
+        opacity: 0.8;
+    
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
 }

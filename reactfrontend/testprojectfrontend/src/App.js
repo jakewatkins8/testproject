@@ -185,6 +185,9 @@ const [debugData, setDebugData] = useState("");
 
     console.log(`At app (top) level: Note with UUID ${noteKeyForDeletion} has been selected for deletion.`);
 
+
+    
+
     console.log(notes);
 
     // locate the note with the correct UUID, and remove it from the list:

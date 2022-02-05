@@ -13,8 +13,21 @@ interface ProfileModal {
 const ProfileModal = (prop: { currentUser : string, modalClosed: Function, selectedUser: Function }) => {
 
     const [users, setUsers] = useState([]);
+
+    const [modalStyle, setModalStyle] = useState({});
     
     useEffect(() => getUserList(), []);
+
+
+    // update style for animation (?)
+    useEffect(() => {
+        
+        setModalStyle({
+            transform: 'scale(1)',
+            opacity: '1'
+        });
+
+    }, []);
 
 
     // how to dismiss the modal? maybe just a close button for now.
@@ -55,7 +68,7 @@ const ProfileModal = (prop: { currentUser : string, modalClosed: Function, selec
     const requestUserNotes = () => {};
 
     return (
-        <div className="profileModal">
+        <div style={modalStyle} className="profileModal">
             <button onClick={handleModalClose} className="modalClose">
                 <span>✕</span>
             </button>
@@ -66,6 +79,7 @@ const ProfileModal = (prop: { currentUser : string, modalClosed: Function, selec
                                             {userName}
                                         </button>
                                     </li>)}
+
             </ol>
         </div>
         ); 

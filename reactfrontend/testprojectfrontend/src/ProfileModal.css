@@ -18,6 +18,11 @@
 
     overflow-y: auto;
 
+    transform: scale(0.3);
+    opacity: 0;
+
+    transition: 0.25s;
+
 
     
 }
@@ -49,6 +54,7 @@
 .profileModal button {
     margin: 0;
     border-radius: 0;
+    min-width: 200px;
 }
 
 .modalClose {
@@ -66,17 +72,18 @@
     border-radius: 10px !important;
     border: solid 2px black;
 
-    background-color: rgb(253, 137, 137);
+    background-color: rgb(253, 137, 137) !important;
 
     z-index: 15;
 
-    min-width: 50px;
+    min-width: 50px !important;
+    max-width: 50px !important;
 
 
 }
 
 .modalClose:hover {
-    background-color: rgb(255, 98, 98);
+    background-color: rgb(255, 98, 98) !important;
 }
 
 .modalClose:active {

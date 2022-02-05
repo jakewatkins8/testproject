@@ -10,19 +10,23 @@
     padding-top: 20px;
     display: flex;
     flex-flow: row wrap;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: flex-start;
 
 }
 
 .noneMessage {
     position: relative;
-    color: white;
+    color: black;
     width: 85%;
     height: 55vh;
     font-size: 1.2em;
 
     margin: 1em auto 0 auto;
 
-    background-color: #5c2550;
+    background-color: #F8D862;
+    /* #5c2550; */
 
     display: flex;
     flex-flow: column nowrap;
@@ -39,7 +43,7 @@
 
 .noneMessage p {
 
-    margin: 1em 0.5em 2em 0.5em;
+    margin: 0.5em 0.5em 1em 0.5em;
 }
 
 
@@ -51,9 +55,29 @@
     /* box-shadow: 0 0 10px 3px black; */
     border: 2px solid black;
 
-    transition: 2s;
-    transition-timing-function: linear;
+    transform: translateY(-6px);
+
+    transition: 1s;
+    transition-timing-function: ease-in;
     opacity: 0;
 }
 
+.notesImg:hover {
+    transform: scale(1.03);
+    transition: 0.4s;
+}
+
+.notesImg:not(:hover) {
+    transition: 0.2s;
+}
+
+
+@media screen and (max-width: 470px) {
+    
+.noteContainer {
+    min-height: 90vh;
+}
+
+
+}
 
