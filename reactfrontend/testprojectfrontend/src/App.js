@@ -81,7 +81,7 @@ const [debugData, setDebugData] = useState("");
   useEffect(() => {
 
     if (tipDisplayed === true) {
-    setInfo('Double click/double tap a note\'s text area to edit it.');
+    setInfo('Click/tap a note\'s text area to edit it.');
     } else {
       // does nothing now.
     }

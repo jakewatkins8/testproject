@@ -31,6 +31,10 @@
     border-radius: 50px;
 
     /* padding-bottom: 5em; */
+
+    transition: 0.7s;
+    transition-timing-function: ease-in;
+    opacity: 0;
 }
 
 .noneMessage p {
@@ -46,6 +50,10 @@
     border-radius: 50px;
     /* box-shadow: 0 0 10px 3px black; */
     border: 2px solid black;
+
+    transition: 2s;
+    transition-timing-function: linear;
+    opacity: 0;
 }
 
 

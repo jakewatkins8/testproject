@@ -169,15 +169,16 @@ button:hover {
 
 .infoI {
   /* font-family: sans-serif; */
-  margin-top: 1px;
-  margin-left: 0.4em;
-  margin-right: 0.3em;
+  margin-top: 0.5px;
+  /* margin-left: 0.4em;
+  margin-right: 0.3em; */
   /* margin: 0 0.2em 0 0.4em; */
   /* margin-top: 0.2em; */
   /* margin-right: 0.2em; */
   /* font-size: 1.5em; */
-  width: 19.5px;
-  height: 19.5px;
+  /* width: 1px; */
+  height: 19px;
+  width: 19px;
   text-align: center;
   background-color: rgba(46, 114, 85, 0.527);
   display: flex;

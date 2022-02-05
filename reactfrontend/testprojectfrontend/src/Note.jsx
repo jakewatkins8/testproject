@@ -5,7 +5,7 @@ import "./Note.css";
 
 const Note = (props) => {
 
-    const [isReadOnly, setIsReadOnly] = useState(true);
+    // const [isReadOnly, setIsReadOnly] = useState(true);
     const [isFocused, setIsFocused] = useState(false);
     const [isNew, setIsNew] = useState(props.userCreated);
     
@@ -15,7 +15,7 @@ const Note = (props) => {
 
     useEffect(() => {
         if (isNew) {
-            setIsReadOnly(false);
+            // setIsReadOnly(false);
             setIsFocused(true);
         }
     }, []);
@@ -23,7 +23,7 @@ const Note = (props) => {
 
     // useEffect(() => handleDisplayTip(), [isFocused, isReadOnly]);
 
-    const handleSingleClick = (event) => {
+    const handleClick = (event) => {
 
         if (!isFocused) {
             handleEditClick(event);
@@ -45,7 +45,7 @@ const Note = (props) => {
         // and pass event up the component chain:
         props.editNote(event);
 
-        setIsReadOnly(false);
+        // setIsReadOnly(false);
 
         activeTextArea.current.focus();
 
@@ -92,9 +92,9 @@ const Note = (props) => {
     // reset the textarea to read only (and the normal color) if it was being edited:
     const handleBlur = (event) => {
         console.log('handle blur(handling focus leaving the textarea) running');
-        if (!isReadOnly) {
-            setIsReadOnly(true);
-        }
+        // if (!isReadOnly) {
+        //     setIsReadOnly(true);
+        // }
         if (isNew) {
             setIsNew(false);
         }
@@ -129,10 +129,10 @@ const Note = (props) => {
             <button onClick={handleInfoClick}>i</button>
         </div>
         <div className="noteHotBar">
-            <button onClick={handleEditClick} className="edit">edit</button>
+            <button onClick={handleEditClick} className="edit" style={ {backgroundColor: isFocused ? '#75ecbb' : '' }}>edit</button>
             <button onClick={handleDeleteClick} className="delete">delete</button>
         </div>
-        <textarea onMouseEnter={handleShowTip} onMouseLeave={handleHideTip} onClick={handleSingleClick} autoFocus ref={activeTextArea} onBlur={handleBlur} readOnly={isReadOnly} defaultValue={props.content}
+        <textarea onMouseEnter={handleShowTip} onMouseLeave={handleHideTip} onClick={handleClick} onTouchStart={handleEditClick} ref={activeTextArea} onBlur={handleBlur} defaultValue={props.content}
         placeholder={isNew ? "New note - start writing something..." : ""}
         style={ { backgroundColor: isFocused && '#F8D862'} } />
         {/* {(isReadOnly && isFocused) && (<>
@@ -140,6 +140,8 @@ const Note = (props) => {
         <p className="noteToolTip">(double click/double tap the text area to edit)</p>
         </> 
         )} */}
+        {/* tags removed from textarea - changing the edit workflow: */}
+        {/* readOnly={isReadOnly}  */}
     </div>
     );
 

@@ -26,8 +26,9 @@
 
     background-color: transparent;
     border: none;
-    border-top: dotted 2px rgba(0,0,0,0.3);
-
+    border: dotted 2px rgba(0,0,0,0.3);
+    border-color: transparent;
+    border-top: rgba(0,0,0,0.3);
     padding: 0.5em;
 }
 
@@ -36,15 +37,22 @@
     border: dotted 2px rgba(0,0,0,0.8);
     /* background-color: #F8D862; */
 
-    transition: 0.2s;
+    /* transition: 0.2s; */
 }
 
 .note textarea:not(:focus):hover {
     cursor: pointer;
     background-color: rgb(255, 234, 164) !important;
 
-    transition: 0.2s;
+    /* transition: 0.2s; */
   }
+
+.note textarea:focus:active {
+cursor: pointer;
+background-color: rgb(255, 234, 164) !important;
+
+/* transition: 0.2s; */
+}
 
 .infoButton {
 position: absolute;
