@@ -18,15 +18,11 @@ const NoteContainer = (props) => {
     // const [imageOpacity, setImageOpacity] = useState('1');
 
     const [messageStyle, setMessageStyle] = useState({
-        opacity: '0',
-        backgroundColor: '#56817b',
-        transform: 'translateY(-5px)'
+        opacity: '0'
     });
 
     const [imageStyle, setImageStyle] = useState({
-        opacity: '0',
-        backgroundColor: '#F8D862',
-        transform: 'translateY(-10px)'
+        opacity: '0'
     });
 
 
@@ -35,29 +31,19 @@ const NoteContainer = (props) => {
 
 useEffect(() => {
     if (Object.keys(props.notes).length === 0) {
-        messageFadeTimer = setTimeout(function() {
-            setMessageStyle({
-                opacity: '1',
-                backgroundColor: '#F8D862'
-            });
-            imageFadeTimer = setTimeout(function(){ setImageStyle({
-                opacity: '1',
-                backgroundColor: 'rgb(255, 247, 224)'
-            }) }, 900);
-        }, 300);
+        setMessageStyle({
+            opacity: '1'
+        });
+        setImageStyle({
+            opacity: '1'
+        });
     }
     else if (messageStyle.opacity !== '0') {
         setMessageStyle({
-            opacity: '0',
-            backgroundColor: '#56817b',
-            transform: 'translateY(-3px)'
+            opacity: '0'
         });
-        clearTimeout(messageFadeTimer)
-        clearTimeout(imageFadeTimer);
         setImageStyle({
-            opacity: '0',
-            backgroundColor: '#F8D862',
-            transform: 'translateY(-12px)'
+            opacity: '0'
         });
     }
 }, [props.notes]);
@@ -86,7 +72,7 @@ const handleNoteInfo = (event) => {
     props.noteInfo(event);
 };
 
-const handleEditToolTip = displayed => {props.handleTipDisplay(displayed)};
+// const handleEditToolTip = displayed => {props.handleTipDisplay(displayed)};
 
 
 return (
@@ -119,10 +105,11 @@ key={newRandKey} noteKey={newRandKey}  */}
 {/* TODO -> does LOSING the old initial UUID cause any problems as long as React knows which is which? */}
 {/* maybe not. maybe if it were an issue, you could also port over a different unique identifier from the DB. */}
 {/* changing the tag from key={noteData.noteKey}, and noteKey={noteData.noteKey} to something else too */}
+{/* handleToolTip={handleEditToolTip} */}
 
           return (<Note content={noteData.note} key={uuidV4()} noteKey={noteData.noteKey}
           editNote={handleEditNote} deleteNote={handleDeleteNote} 
-          handleToolTip={handleEditToolTip} noteInfo={handleNoteInfo} />);
+           noteInfo={handleNoteInfo} />);
         })
         }
 

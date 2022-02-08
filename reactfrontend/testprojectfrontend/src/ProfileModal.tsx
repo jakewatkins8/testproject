@@ -41,7 +41,7 @@ const ProfileModal = (prop: { currentUser : string, modalClosed: Function, selec
 // TODO -> change to actually query DB
 // dummy data:
         const usersFromDb = [
-            [{'username': 'dog_walker'}], 
+            [{'username': 'dog'}], 
             [{'username': 'cat_sitter'}], 
             [{'username': 'software_engr'}]
     ];

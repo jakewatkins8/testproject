@@ -7,6 +7,10 @@ import cors from 'cors';
 import ENVIRON from "./environment.js";
 
 import DataAccessObject from "./dataAccessObject.js";
+// import { Mongoose } from 'mongoose';
+
+
+import { dbPopulationData } from './dbPopulationData.js';
 
 
 
@@ -18,15 +22,16 @@ Dao.connectToDb();
 
 Dao.initializeDbStructure();
 Dao.addDocsOfModel('User', 
-[{userName: 'alfie'}, 
-{userName: 'billie'}, 
-{userName: 'dean'}, 
-{userNameAAAA: 2}], 
+[{userName: 'JMorrison'}, 
+{userName: 'NTesla'}, 
+{userName: 'BRattfink'}] 
 );
 
-Dao.dropDocsOfModel('UUUUser');
+Dao.addDocsOfModel('Note', dbPopulationData);
 
-Dao.dropDocsOfModel('User');
+// Dao.dropDocsOfModel('UUUUser');
+
+// Dao.dropDocsOfModel('User');
 
 // obtain the port to run the Express server on:
 const PORT = ENVIRON.PORT;
@@ -88,6 +93,25 @@ app.post('/retrievenotes', (req, res) => {
     console.log('request body', req.body);
     res.send({'responsefromserver': req.body.greeting});
 });
+
+// 
+
+app.get('/usersnotes', (req, res) => {
+    let result = Dao.findDocsOfModel('Note', where({'author': 'JMorrison'})).toArray();
+
+    res.send(JSON.stringify({'result': result}));
+});
+
+app.post('/query', (req, res) => {
+    // unpack query and run it using mongoose
+    let queryData = req.json();
+    console.log(queryData);
+    let query = Dao.buildFilter(queryData);
+    let results = Dao.findDocsOfModel('Note', query);
+    res.send(JSON.stringify({'result': results}));
+});
+
+// 
 
 app.listen(PORT);
 

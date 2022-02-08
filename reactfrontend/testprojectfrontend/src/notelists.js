@@ -32,46 +32,10 @@ const findListByUser = (userName) => {
 
 };
 
-// const noteLists = [
-//     [
-//         {
-//             'dog_walker': 
-//             [
-//                 [{note: 'Dog treats', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},],
-//                 [{note: 'Dog shampoo', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},],
-//                 [{note: 'Dog food', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},],
-//                 [{note: 'Dog leash', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},]
-//             ]
-//         }
-//     ],
-//     [
-//         {
-//             'cat_sitter': 
-//             [
-//                 [{note: 'Cat shampoo', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},],
-//                 [{note: 'Cat treats', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},],
-//                 [{note: 'human first aid kit', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},],
-//                 [{note: 'spray bottle', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},]
-//             ]
-//         }
-//     ],
-//     [
-//         {
-//             'software_engr': 
-//             [
-//                 [{note: 'open issue', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},],
-//                 [{note: 'open issue caused by working on issue', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},],
-//                 [{note: 'delete feature and close issues', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},],
-//                 [{note: 'mothball app', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},]
-//             ]
-//         }
-//     ]
-// ];
-
 const noteLists = [
     [
         {
-            'dog_walker': 
+            'dog': 
             [
                 {note: 'Dog treats', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},
                 {note: 'Dog shampoo', noteKey: uuidV4(), dateCreated: Date(dummyDataCreateDate), dateModified: Date(dummyDataCreateDate)},

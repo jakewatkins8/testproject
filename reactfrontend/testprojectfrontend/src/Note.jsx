@@ -9,12 +9,11 @@ const Note = (props) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isNew, setIsNew] = useState(props.userCreated);
     
-    const [toolTipDisplayed, setToolTipDisplayed] = useState(false);
+    // const [toolTipDisplayed, setToolTipDisplayed] = useState(false);
 
-    const [moveMode, setMoveMode] = useState(false);
 
     // boolean flag state object to trigger a deleted animation:
-    const [deletedAnim, setDeletedAnim] = useState(false);
+    // const [deletedAnim, setDeletedAnim] = useState(false);
 
 
     
@@ -47,8 +46,8 @@ const Note = (props) => {
         handleEditClick(event);
 
 
-        setToolTipDisplayed(false);
-        handleHideTip(false);
+        // setToolTipDisplayed(false);
+        // handleHideTip(false);
 
 
     };
@@ -80,12 +79,12 @@ const Note = (props) => {
 
 
 
-        // trigger a CSS 'deleted' animation:
-        setDeletedAnim(true);
+        // // trigger a CSS 'deleted' animation:
+        // setDeletedAnim(true);
 
         
 
-        setTimeout(() => props.deleteNote(event), 400);
+        props.deleteNote(event);
 
 
         // and pass event up the component chain:
@@ -131,24 +130,18 @@ const Note = (props) => {
 
     let toolTipAppearTimer;
 
-    const handleShowTip = (event) => {
-
-        toolTipAppearTimer = setTimeout(() => {
-            props.handleToolTip(true);
-            setToolTipDisplayed(true);    
-        }, 500);
-
-    };
+    // const handleShowTip = (event) => {
+    //         props.handleToolTip(true);
+    //         setToolTipDisplayed(true);    
+    // };
 
     
-    const handleHideTip = (event) => {
+    // const handleHideTip = (event) => {
 
-        clearTimeout(toolTipAppearTimer);
-        
-        props.handleToolTip(false);
-        setToolTipDisplayed(false);
+    //     props.handleToolTip(false);
+    //     setToolTipDisplayed(false);
 
-    };
+    // };
 
     const focusStyle = {
         backgroundColor: '#F8D862',
@@ -162,18 +155,15 @@ const Note = (props) => {
 
 
     return (
-    <div style={deletedAnim ? deleteNoteStyle : {}} className="note">
-        {!deletedAnim && 
-            <div className="noteHotBar">
-            <button onClick={handleInfoClick}>info</button>
-            <button onClick={handleEditClick} className="edit" style={ isFocused ? focusStyle : {} }>edit</button>
-            <button onClick={handleDeleteClick} className="delete">delete</button>
-            </div>
-        }
-        <textarea onMouseEnter={handleShowTip} onMouseLeave={handleHideTip} onClick={handleClick} onTouchStart={handleEditClick} ref={activeTextArea} onBlur={handleBlur} defaultValue={props.content}
+    <div className="note">
+        <div className="noteHotBar">
+        {/* <button onClick={handleInfoClick}>info</button> */}
+        <button onClick={handleEditClick} className="edit" style={ isFocused ? focusStyle : {} }>edit</button>
+        <button onClick={handleDeleteClick} className="delete">delete</button>
+        </div>
+        <textarea onClick={handleClick} onTouchStart={handleEditClick} ref={activeTextArea} onBlur={handleBlur} defaultValue={props.content}
         placeholder={isNew ? "New note - start writing something..." : ""} 
         style={ { backgroundColor: isFocused && '#F8D862'} } />
-
     </div>
     );
 

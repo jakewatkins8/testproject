@@ -1,16 +1,20 @@
 // import Mongoose ODM to communicate with Atlas MongoDB:
-import mongoose from 'mongoose';
+// import { Mongoose as mongoose } from 'mongoose';
+const mongoose = require('mongoose');
 
 import ENVIRON from "./environment.js";
+
+
+// import { attrs_for_models } from './queryBuilderData.js';
 
 // Data access object, to access MongoDB instance:
 // DAO as a (constructor?) function?
 const DataAccessObject = () => {
 
-    // Object to hold refs to important aspects of the database access object:
+    // Object to hold refs to important properties of the database access object:
     const dataObj = {};
 
-    // Object to hold all created document models for use in CRUD operations:
+    // Object to hold refs to all created document models for use in CRUD operations:
     const models = {};
 
 
@@ -33,7 +37,9 @@ const DataAccessObject = () => {
             dataObj.dbUri = `mongodb+srv://${ENVIRON.MONGO_USERNAME}:${ENVIRON.MONGO_PW}@cluster0.v4cer.mongodb.net/
             ${ENVIRON.MONGO_DB_NAME}?retryWrites=true&w=majority`;
         
-            mongoose.connect(dataObj.dbUri, { useNewUrlParser: true, useUnifiedTopology: true});
+            mongoose.connect(dataObj.dbUri, { 
+                useNewUrlParser: true, 
+                useUnifiedTopology: true });
         
             // obtain reference to db connection:
             dataObj.db = mongoose.connection;
@@ -41,8 +47,8 @@ const DataAccessObject = () => {
             // binds any error events that occur from connecting to the db to the console:
             dataObj.db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-            // return the connection/Db object:
-
+            // return the connection/Db object, if anything in the outer module wants to access it here:
+            // but, there probably just won't be a need.
             return dataObj.db;
 
             // TODO investigate need or lack of need for async here.
@@ -134,6 +140,31 @@ const DataAccessObject = () => {
 
         },
 
+        buildFilter: function(modelName, conditions) {
+
+            // receive as many objects as 'rows' are filled & received from the front end
+
+            // up to 4
+
+            // start with 1 condition:
+
+            // consisting of an attribute, a value, and an operator.
+
+            if (attrs_for_models[modelName] === undefined) {
+                console.error('The model passed as a param is not recognized.');
+                return;
+            }
+
+            const attrs = attrs_for_models[modelName];
+
+            // given an input object of form
+
+            // {attr: {$op: value}}
+
+            // given a set of 4 conditions that can be received, map them all to a JS object and build a filter object out of the final result.
+            return filterObj;
+        },
+
         // TODO function stub - for read
         // This method will also be used in the update and delete methods below
         findDocsOfModel: async function(modelName, filterObj) {
@@ -200,9 +231,10 @@ const DataAccessObject = () => {
                 // (to protect againt malicious syntax injection attacks (JSON/BSON injection...?))
                 // ex. -> sanitizeFilter(filterObj);
 
-                sanitizeFilter(filterObj)
+                mongoose.sanitizeFilter(filterObj)
                 // when compared with deleteMany(filter), the below may be redundant:
                 // modelObj.find(filterObj);
+                this.findDocsOfModel(modelObj, filterObj);
             }
  
             // TODO -> make sure that this is not always executing the query twice. ("Queries are not Promises" in Mongoose docs)

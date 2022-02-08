@@ -19,12 +19,23 @@ import { v4 as uuidV4 } from 'uuid';
 
 import ProfileModal from "./ProfileModal.tsx";
 import ModalBackgroundDim from "./ModalBackgroundDim.jsx";
+import { Query } from "mongoose";
+import QueryStatement from "./QueryStatement.jsx";
 
 
 
 
 function App() {
 
+
+
+  const [queryExpanded, setQueryExpanded] = useState(false);
+
+
+  const [query, setQuery] = useState({
+    0: {},
+    1: {}
+  });
 
 
   // trivial state object that is used to test and confirm a state update when a response from the Express API server is received:
@@ -34,6 +45,7 @@ function App() {
 
 
   const [info, setInfo] = useState("");
+  // This is test info for the info bar.
 
 
 
@@ -51,7 +63,7 @@ function App() {
   // using State here because the implementation of a context solution is important, but not
   // the main point of this part of the project. 
   // The objectives are to practice writing TypeScript, and set up communication with a Mongo database.
-  const [currentUserName, setCurrentUserName] = useState("dog_walker");
+  const [currentUserName, setCurrentUserName] = useState("dog");
 
   const getCurrentUserName = () => currentUserName;
 
@@ -65,7 +77,7 @@ function App() {
   // console.log(currentList);
 
   // state object to hold the state of the note objects being rendered:
-  const [notes, setNotes] = useState([]);
+const [notes, setNotes] = useState([]);
 
 
 
@@ -73,20 +85,6 @@ const [debugData, setDebugData] = useState("");
 
 
 
-    
-
-// TODO -> the special TypeScript types that behave like enums seem like a good use case for the Info state object's possible values.
-
-
-  // useEffect(() => {
-
-  //   if (tipDisplayed === true) {
-  //   setInfo('Click/tap a note\'s text area to edit it.');
-  //   } else {
-  //     // does nothing now.
-  //   }
-
-  // }, [tipDisplayed]);
 
 
 
@@ -94,10 +92,12 @@ const [debugData, setDebugData] = useState("");
   useEffect(() => {
 
 
-    // calls the lookup method in noteslist.js to locate the current username's collection of notes: 
-    let list = findListByUser(currentUserName);
+    // // calls the lookup method in noteslist.js to locate the current username's collection of notes: 
+    // let list = findListByUser(currentUserName);
 
-    console.log(list);
+    // console.log(list);
+
+    let list = fetch(`${REACT_APP_SERVER_PATH}/`)
 
     // having obtained the 2D array/object of "rows" of list objects for the current user,
     // sets state of the notes object as the 2D collection:
@@ -236,6 +236,25 @@ const [debugData, setDebugData] = useState("");
     
   };
 
+  // toggle query builder open/closed:
+  const handleQueryOpen = (event) => {
+    setQueryExpanded(oldVal => !oldVal);
+  };
+
+  const validateAndRunQuery = (event) => {
+
+
+    // validate input data here on the front end
+
+    fetch(`${REACT_APP_SERVER_PATH}/query`, {
+      'method': 'POST',
+      'body': JSON.stringify(query),
+      'Headers': {'Content-Type': 'application/json'}
+    }).then((res) => {
+
+      console.log(res);
+    }).catch((error) => console.log(error));
+  };
 
   return (
     <div className="App">
@@ -252,14 +271,37 @@ const [debugData, setDebugData] = useState("");
         </div>
         <nav className="navColumn">
           <div className="userInfo">
-            <p>Current user profile: {currentUserName}</p>
+            <p>Current user profile:&nbsp;</p> <p>{currentUserName}</p>
           </div>
  
             <div className="hotBar"> 
+            <div className="topRow">
+              <button className="queryOpen" onClick={handleQueryOpen}>Open query builder</button>
+            </div>
+            {queryExpanded && (
+            <form onSubmit={validateAndRunQuery}>
+            <div className="queryBox">
+              <div className="topRow">
+                <button className="queryOpen" onClick={handleQueryOpen}>Close query builder</button>
+                <p>Query Conditions: {Object.keys(query).length} of 2</p>
+              </div>
+              <div className="middleRow">
+                <QueryStatement />
+              </div>
+              <div className="bottomRow">
+                <QueryStatement isChainedStatement /> 
+                <button type='submit'>Run query</button>
+              </div>
+            </div>
+            </form>)
+            }
+
+            <div className="rightColumnButtons">
               <button onClick={addNewNote}>New note</button>
               <button onClick={loadUserProfile} type="submit">
                   Load existing profile
               </button>
+            </div>
 
             </div>
 

@@ -35,7 +35,8 @@
 .App-header {
   width: 94%;
   border-radius: 10px;
-  background-color: #917055;
+  /* background-color: #ffc145 ; */
+  background-color: #5e4a2c;
   height: 15vh;
   padding-bottom: 2em;
 
@@ -70,7 +71,7 @@ button {
 
   /* border-radius: 0 0 0 44px; */
 
-  background-color: rgb(129, 194, 255);
+  background-color: #FCFDAF;
   /* #ff9ec6; */
 
   /* background: linear-gradient(#FCFDAF, #ffff75); */
@@ -93,7 +94,7 @@ button {
 .navColumn {
   width: 80%;
   height: 100%;
-  margin-top: 2em;
+  margin-top: 2.2em;
   margin-bottom: 0.5em;
   /* background-color: yellow; */
 
@@ -106,9 +107,11 @@ button {
 
   /* background-color: #FCFDAF; */
 
-  background-color: #005543;
+  background-color: #74aa8b;
   
-  border-radius: 20px 200px 10px 10px ;
+  
+  /* border-radius: 20px 200px 10px 10px ; */
+  border-radius: 70px;
 
   z-index: 4;
 
@@ -118,7 +121,7 @@ button {
 button {
   border: 2px solid black;
   border-radius: 999px;
-  background-color: rgb(88, 226, 173);
+  background-color: #76e5cb;
   font-size: 1.2em;
 
   margin: 0.5em;
@@ -142,28 +145,150 @@ button:hover {
 
 /*  the three rows of the flex column "navColumn"; the right column of the app header */
 .userInfo {
-  color: white;
+  /* color: white; */
+  /* background-color: red; */
   height: 35%;
+  width: 96.5%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: flex-end;
+
+  padding-right: 2em;
+
+  
+  border-radius: 200px 50px 10px 10px;
+  background-color: #bbfff0;
 }
 
 .hotBar {
-  height: 45%;
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  /* background-color: purple; */
 }
+
+.hotBar .queryOpen {
+  position: relative;
+  border-radius: 10px;
+  padding-left: 1.2em;
+}
+
+.queryBox {
+  position: absolute;
+  top: 83px;
+  width: 74%;
+  height: 150px;
+  background-color: #00795a;
+
+  z-index: 900;
+  border-radius: 5px;
+}
+
+.queryBox {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.queryBox .topRow, .queryBox .middleRow, .queryBox .bottomRow {
+  width: 100%;
+  height: 33%;
+  /* background-color: red; */
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+
+
+}
+
+select, input {
+  position: relative;
+  margin: 0.4em;
+  font-size: 1.1em;
+  height: 80%;
+  padding: 0 0.2em 0 0.2em;
+  max-width: 25%;
+  border-radius: 5px;
+  border-width: 2px;
+  z-index: 1000;
+}
+
+.queryRow {
+  width: 70%;
+  background-color: #cc7d22;
+  border-radius: 15px;
+}
+
+.queryRow .toggleCondition {
+  width: 23px;
+  height: 23px;
+  position: relative;
+  left: 3px;
+  top: 4px;
+}
+
+.queryRow label {
+  position: absolute;
+  left: -190px;
+  bottom: 3px;
+  color: white;
+  background-color: #cc7d22;
+  height: 2.5em;
+  border-radius: 15px;
+  padding-right: 1.5em;
+  padding-left: 0.3em;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0.3em;
+}
+select, input {
+  font-family: 'Outfit', sans-serif;
+}
+
+.queryBox .topRow p {
+  color: white;
+  font-size: 1.3em;
+
+  width: 33%;
+}
+
+
+.queryBox .middleRow p {
+  color: white;
+  font-size: 1.3em;
+
+  width: 28%;
+}
+
 .infoBar {
-  font-size: 1.0em;
-  height: 20%;
+  font-size: 1.2em;
+  height: 33%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: flex-end;
+  margin-bottom: 0em;
+  padding: 0 0.1em 0 0.1em;
 
   width: 100%;
 
-  background-color: rgb(88, 226, 173);
-  border-radius: 5px;
+  /* background-color: rgb(88, 226, 173); */
+  border-radius: 10px 10px 200px 50px;
   /* border: solid 2px black; */
-  /* border-width: 2px 0 2px 0; */ 
+  /* border-width: 0 0 2px 0;  */
 
+  color: white;
+
+  /* background-color: rgb(74, 84, 94); */
+  background-color: #00965c;
 
 }
 
@@ -325,6 +450,8 @@ button:hover {
         .userInfo {
           color: white;
           height: 25%;
+
+
         }
 
         .hotBar {

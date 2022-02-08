@@ -1,6 +1,7 @@
 .noteContainer {
 
-    background-color: #56817b;
+    /* background-color: #df8155; */
+    background-color: #c99e5e;
     width: 94%;
     min-height: 60vh;
 
@@ -25,7 +26,7 @@
 
     margin: 1em auto 0 auto;
 
-    background-color: #F8D862;
+    background-color: #ffdc5c;
     /* #5c2550; */
 
     display: flex;

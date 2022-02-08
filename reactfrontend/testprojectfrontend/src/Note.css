@@ -110,12 +110,16 @@ opacity: 0.8;
     margin: 0;
     padding: 0.5em 0 0.5em 0;
 
-    background-color: rgb(88, 226, 173);
-    font-size: 0.8em;
+    /* background-color: rgb(88, 226, 173);
+     */
+     background-color: #76e5cb;
+    font-size: 0.9em;
 
-    opacity: 0.8;
+    opacity: 1;
 
     min-width: 30%;
+
+    /* color: white; */
 
 
 
