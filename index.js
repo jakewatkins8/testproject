@@ -1,16 +1,58 @@
-const express = require('express');
+import 'dotenv/config';
+import express from 'express'; 
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const path = require('path');
+import cors from 'cors';
+import ENVIRON from "./environment.js";
 
-// to use cross-origin resource sharing between localhost:5000 and :3000 during development:
-const cors = require('cors');
+import DataAccessObject from "./dataAccessObject.js";
+
+
+
+// console.log('dbUri', DAO.dbUri);
+
+const Dao = DataAccessObject();
+console.log('newly constructed Dao obj:', Dao);
+Dao.connectToDb();
+
+Dao.initializeDbStructure();
+Dao.addDocsOfModel('User', 
+[{userName: 'alfie'}, 
+{userName: 'billie'}, 
+{userName: 'dean'}, 
+{userNameAAAA: 2}], 
+);
+
+Dao.dropDocsOfModel('UUUUser');
+
+Dao.dropDocsOfModel('User');
+
+// obtain the port to run the Express server on:
+const PORT = ENVIRON.PORT;
+
+
+
+
+
 
 // create express app instance:
 const app = express();
 
+
+
+
+
+
 // use to parse body contents in JSON requests (this replaced 'bodyparser')
 app.use(express.json());
 
+
+
+// manually obtain a value for dirname to use in serving the static files, 
+// as '__dirname' is not accessible in an ES module like this one.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // use both static middleware functions to serve React files:
 // note: order may matter here; i.e., having express.static("public") first 
@@ -21,9 +63,7 @@ app.use(express.static("public"));
 // use to allow cross-origin resource sharing during development:
 app.use(cors());
 
-// use environment variable for the port that Node/express will use to run on, 
-// and use port 5000 if still in development:
-const PORT = process.env.PORT || 5000;
+
 
 // a route for a GET request to the root address of the server.
 // disabled, as the express.static file functions are now serving all of the get requests made
@@ -52,3 +92,6 @@ app.post('/retrievenotes', (req, res) => {
 app.listen(PORT);
 
 console.log('the express app is running successfully.');
+
+
+

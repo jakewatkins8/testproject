@@ -3,6 +3,10 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,node
 
 ### Node ###
+
+# environment variable file:
+.env
+
 # Logs
 logs
 *.log

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Note from "./Note.jsx";
 import "./NoteContainer.css";
 
-import { PUBLIC_URL } from "./environment.js";
+import { REACT_APP_PUBLIC_URL } from "./environment.js";
 
 
 // use UUID for list item keys (note keys):

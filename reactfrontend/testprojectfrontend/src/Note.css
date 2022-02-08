@@ -14,7 +14,7 @@
     z-index: 600;
 
 
-    transition: 0.5s;
+    /* transition: 0.5s; */
 }
 
 .note textarea {
@@ -85,8 +85,8 @@ opacity: 0.8;
 .note .edit {
     /* position: relative;
     top: 10px; */
-    transition: 250ms;
-    transition-timing-function: ease;
+    /* transition: 250ms;
+    transition-timing-function: ease; */
 }
 
 .noteHotBar {
@@ -154,7 +154,7 @@ opacity: 0.8;
         width: 9em;
         height: 9em;
 
-        transition: 0.4s;
+        /* transition: 0.4s; */
     }
 
     .noteHotBar button {

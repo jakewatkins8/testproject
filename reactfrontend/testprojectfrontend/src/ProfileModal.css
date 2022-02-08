@@ -18,10 +18,10 @@
 
     overflow-y: auto;
 
-    transform: scale(0.3);
-    opacity: 0;
+    /* transform: scale(0.3); */
+    /* opacity: 0; */
 
-    transition: 0.25s;
+    /* transition: 0.25s; */
 
 
     

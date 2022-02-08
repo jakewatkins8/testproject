@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import './App.css';
-import { SERVER_PATH } from './environment';
+import { REACT_APP_SERVER_PATH } from './environment';
 
 import Note from "./Note.jsx";
 import NoteContainer from "./NoteContainer.jsx";
@@ -37,9 +37,9 @@ function App() {
 
 
 
-  const [tipDisplayed, setTipDisplayed] = useState(false);
+  // const [tipDisplayed, setTipDisplayed] = useState(false);
 
-  const handleEditToolTip = (displayed) => setTipDisplayed(displayed);
+  // const handleEditToolTip = (displayed) => setTipDisplayed(displayed);
 
 
   const [profileModalActive, setProfileModalActive] = useState(false);
@@ -78,15 +78,15 @@ const [debugData, setDebugData] = useState("");
 // TODO -> the special TypeScript types that behave like enums seem like a good use case for the Info state object's possible values.
 
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (tipDisplayed === true) {
-    setInfo('Click/tap a note\'s text area to edit it.');
-    } else {
-      // does nothing now.
-    }
+  //   if (tipDisplayed === true) {
+  //   setInfo('Click/tap a note\'s text area to edit it.');
+  //   } else {
+  //     // does nothing now.
+  //   }
 
-  }, [tipDisplayed]);
+  // }, [tipDisplayed]);
 
 
 
@@ -264,20 +264,20 @@ const [debugData, setDebugData] = useState("");
             </div>
 
           <div className="infoBar">
-            <span className="infoI" style={ {opacity: tipDisplayed ? '1' : '0'} }>
-              <span className="infoI_letter">i</span>
-            </span>
-          <span className="noteToolTip" style={ {opacity: tipDisplayed ? '1' : '0'} }>
+            {/* <span className="infoI" style={ {opacity: tipDisplayed ? '1' : '0'} }> */}
+              {/* <span className="infoI_letter">i</span> */}
+            {/* </span> */}
+          {/* <span className="noteToolTip" style={ {opacity: tipDisplayed ? '1' : '0'} }> */}
           {info}
-          </span>
+          {/* </span> */}
           </div>
         </nav>
         
         
       </header>
 
-
-      <NoteContainer handleTipDisplay={handleEditToolTip} editNote={noteEdit} deleteNote={noteDelete} notes={notes}/>
+      {/* handleTipDisplay={handleEditToolTip}  */}
+      <NoteContainer editNote={noteEdit} deleteNote={noteDelete} notes={notes}/>
 
 
       {profileModalActive && <ProfileModal modalClosed={handleModalClosed} selectedUser={handleSelectedUser} currentUser={currentUserName}/>}
