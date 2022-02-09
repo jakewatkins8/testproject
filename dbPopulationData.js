@@ -1,12 +1,13 @@
 
-// an array of data to add to the db:
+// an array of JSON-like structured data objects to add to the db. 
+// Each object will become a MongoDB document:
 
 export const dbPopulationData = [
     {
         userName: 'JMorrison', 
         content: 'Music in the future...might rely heavily on electronics, tapes...I can kind of envision maybe one person with a lot of machines, tapes, and electronics set up, singing or speaking and using machines...', 
         dateCreated: '93432271000', 
-        dateModified: '93432276000'
+        dateModified: '93432276000'     
     },
     {
         userName: 'JMorrison', 
@@ -45,3 +46,4 @@ export const dbPopulationData = [
         dateModified: '1673728982000'
     },
 ];
+                                                                                                   

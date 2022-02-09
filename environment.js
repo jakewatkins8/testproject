@@ -14,7 +14,7 @@ console.log(development);
 // TODO - Note - these fallback values have to be non-sensitive data, as they can be viewed; they are not within a .env file.
 const ENVIRON = {
     'NODE_ENV': 'development',
-    'PORT': '5000', 
+    'PORT': 5000, 
     'MONGO_USERNAME': 'user',
     'MONGO_PW': 'user',
     'MONGO_DB_NAME': 'Cluster0'
@@ -32,5 +32,7 @@ if (development) {
     console.log(`***Note: The express server\'s NODE_ENV value is currently === development. A built version of the app should have a NODE_ENV value
     === production. `);
 }
+
+console.log('*********environment*********', ENVIRON);
 
 export default ENVIRON;

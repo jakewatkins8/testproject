@@ -25,6 +25,7 @@ import QueryStatement from "./QueryStatement.jsx";
 
 
 
+
 function App() {
 
 
@@ -32,9 +33,13 @@ function App() {
   const [queryExpanded, setQueryExpanded] = useState(false);
 
 
+  // TODO no 2nd condition just yet:
+  // / 1: {}
   const [query, setQuery] = useState({
-    0: {},
-    1: {}
+    '0': {
+      'User': {
+        'userName': {
+          '$eq': 'JMorrison'}}}
   });
 
 
@@ -80,30 +85,59 @@ function App() {
 const [notes, setNotes] = useState([]);
 
 
+const [queryResults, setQueryResults] = useState({});
+
+
+
 
 const [debugData, setDebugData] = useState("");
 
 
+useEffect(() => {
+
+  if (queryResults === null || queryResults === undefined || Object.keys(queryResults).length === 0) {
+    // do not attempt to map out the query results, as there are none yet.
+    return;
+  }
+
+  const noteList = [];
+
+  queryResults.map((dataRow) => {
+
+    let noteRowObj = {
+      note: dataRow['content'], 
+      noteKey: uuidV4(), 
+      dateCreated: new Date(dataRow['dateCreated'] * 1000),
+      dateModified: new Date(dataRow['dateModified'] * 1000),
+      userCreated: false
+  };
+
+  noteList.push(noteRowObj);
+
+  });
+
+  setNotes(noteList);
+
+}, [queryResults])
 
 
-
-
+//  TODO turned off until updates further along:
   // runs useEffect when current user name changes (and when component first loads?) to find the correct list for the user
-  useEffect(() => {
+  // useEffect(() => {
 
 
-    // // calls the lookup method in noteslist.js to locate the current username's collection of notes: 
-    // let list = findListByUser(currentUserName);
+  //   // // calls the lookup method in noteslist.js to locate the current username's collection of notes: 
+  //   // let list = findListByUser(currentUserName);
 
-    // console.log(list);
+  //   // console.log(list);
 
-    let list = fetch(`${REACT_APP_SERVER_PATH}/`)
+  //   let list = fetch(`${REACT_APP_SERVER_PATH}/`)
 
-    // having obtained the 2D array/object of "rows" of list objects for the current user,
-    // sets state of the notes object as the 2D collection:
-    setNotes(list);
+  //   // having obtained the 2D array/object of "rows" of list objects for the current user,
+  //   // sets state of the notes object as the 2D collection:
+  //   setNotes(list);
 
-  }, [currentUserName]);
+  // }, [currentUserName]);
 
 
   // function stub to be used to query the backend and retrieve all of a given user profile's notes:
@@ -243,9 +277,14 @@ const [debugData, setDebugData] = useState("");
 
   const validateAndRunQuery = (event) => {
 
+    // suppress default page refresh behavior on Submit:
+    event.preventDefault();
 
-    // validate input data here on the front end
 
+    // validate input data here on the front end\
+
+
+    // then run the query on the Node server:
     fetch(`${REACT_APP_SERVER_PATH}/query`, {
       'method': 'POST',
       'body': JSON.stringify(query),
@@ -253,6 +292,14 @@ const [debugData, setDebugData] = useState("");
     }).then((res) => {
 
       console.log(res);
+      
+      if (res.ok) {
+        return res.json();
+      }
+    }).then(data => {
+      console.log(data);
+      setQueryResults(data);
+      
     }).catch((error) => console.log(error));
   };
 
@@ -273,11 +320,30 @@ const [debugData, setDebugData] = useState("");
           <div className="userInfo">
             <p>Current user profile:&nbsp;</p> <p>{currentUserName}</p>
           </div>
- 
-            <div className="hotBar"> 
-            <div className="topRow">
-              <button className="queryOpen" onClick={handleQueryOpen}>Open query builder</button>
-            </div>
+          {/* the regular header when query builder is not open: */}
+            {!queryExpanded && (<>
+              <div className="hotBar"> 
+   
+              <div className="buttonWrapper">
+              {/* <div className="expandPlusSignBar">
+                <div className="expandPlusSignBar child"></div>
+              </div> */}
+                  <button className="queryOpen" onClick={handleQueryOpen}>Open query builder</button>
+              </div>
+              <div className="rightColumnButtons">
+                <button onClick={addNewNote}>New note</button>
+                <button onClick={loadUserProfile} type="submit">
+                    Load existing profile
+                </button>
+              </div>
+              
+              </div>
+
+                          <div className="infoBar">
+                          <p>{info}</p>
+                        </div></>)}
+
+          {/* the header when query builder is open: */}
             {queryExpanded && (
             <form onSubmit={validateAndRunQuery}>
             <div className="queryBox">
@@ -296,23 +362,8 @@ const [debugData, setDebugData] = useState("");
             </form>)
             }
 
-            <div className="rightColumnButtons">
-              <button onClick={addNewNote}>New note</button>
-              <button onClick={loadUserProfile} type="submit">
-                  Load existing profile
-              </button>
-            </div>
 
-            </div>
 
-          <div className="infoBar">
-            {/* <span className="infoI" style={ {opacity: tipDisplayed ? '1' : '0'} }> */}
-              {/* <span className="infoI_letter">i</span> */}
-            {/* </span> */}
-          {/* <span className="noteToolTip" style={ {opacity: tipDisplayed ? '1' : '0'} }> */}
-          {info}
-          {/* </span> */}
-          </div>
         </nav>
         
         

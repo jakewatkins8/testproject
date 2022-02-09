@@ -9,29 +9,100 @@ import ENVIRON from "./environment.js";
 import DataAccessObject from "./dataAccessObject.js";
 // import { Mongoose } from 'mongoose';
 
-
+// was used to add all 'Note' docs to DB:
 import { dbPopulationData } from './dbPopulationData.js';
 
 
 
 // console.log('dbUri', DAO.dbUri);
 
+
+//  DB init. & testing:
+
+// create database access object
 const Dao = DataAccessObject();
 console.log('newly constructed Dao obj:', Dao);
 Dao.connectToDb();
 
 Dao.initializeDbStructure();
-Dao.addDocsOfModel('User', 
-[{userName: 'JMorrison'}, 
-{userName: 'NTesla'}, 
-{userName: 'BRattfink'}] 
-);
 
-Dao.addDocsOfModel('Note', dbPopulationData);
+const populateInitialDbData = async () => {
 
+    if (await Dao.findDocsByModelName('Note', {}, true)) {
+        console.log(`DB already has at least one ${modelName} document.`);
+        return;
+    } else {
+        // populate with initial dummy dataset:
+        try {
+            const addAll = await Dao.addDocsOfModel('Note', 'User', 'userName', 'AuthorId', dbPopulationData);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+};
+
+// populateInitialDbData();
+
+// adds initial User data to Db 
+// TODO: work on this and set it to only add if 'User" collection does not exist or is empty:
+// Dao.addDocsOfModel('User', 
+// [{userName: 'JMorrison'}, 
+// {userName: 'NTesla'}, 
+// {userName: 'BRattfink'}] 
+// );
+
+// iterates across data to add to db, and assigns _id fields from the database for the respective authors:
+// signature structure: (modelName, refModelName, commonFieldName, refField, docs)
+// const addAll = await Dao.addDocsOfModel('Note', 'User', 'userName', 'AuthorId', dbPopulationData);
+
+
+// Drop all Note docs:
+// (passing a trivial empty filterObj param since it won't be used)
+// Dao.dropDocsOfModel('Note', {}, true);
+
+
+// add all documents using the data in the dbPopulationData.js file's object:
+// const addAll = await Dao.addDocsOfModel('Note', 'User', 'userName', 'AuthorId', dbPopulationData);
+
+// err on the two test queries below: """cannot use $and with text.""" Maybe you use $where or $regex.
+// const findUsers = await Dao.findDocsByModelName('User', {userName: {$and: [{$neq: 'NTesla'}, {$neq: 'JMorrison'}]}});
+// const findDocs = await Dao.findDocsByModelName('Note', {userName: {$and: [{$neq: 'BRattfink'}, {$neq: 'JMorrison'}]}});
+
+// const findUsers = await Dao.findDocsByModelName('User', {userName: {$and: [{$neq: 'NTesla'}, {$neq: 'JMorrison'}]}});
+// const findDocs = await Dao.findDocsByModelName('Note', {userName: {$and: [{$neq: 'BRattfink'}, {$neq: 'JMorrison'}]}});
+ 
+
+
+// if (addAll !== undefined) {
+//     // test finding a particular set of Documents:
+//     const findUsers = await Dao.findDocsOfModel('User', {userName: {$or: [{$neq: 'NTesla'}, {$neq: 'JMorrison'}]}});
+//     // passed
+
+//     if (findUsers !== undefined) {
+//         const findNotes = await Dao.findDocsOfModel('Note', {userName: {$or: [{$neq: 'BRattfink'}, {$neq: 'JMorrison'}]}});
+//     }
+
+// }
+
+
+
+
+// Now, testing updating every note's contents to 'dziad ufolud' (all or many update functionality):
+// Dao.updateDocsOfModel('Note', {_id: {$exists: true}}, {content: 'dziad ufolud'});
+
+
+// Testing dropping specific note docs:
+// Dao.dropDocsOfModel('Note', {userName: "JMorrison", content: "dziad ufolud"});
+
+// Testing if the method will throw an error msg in response to dropping a non-existent model.
 // Dao.dropDocsOfModel('UUUUser');
 
-// Dao.dropDocsOfModel('User');
+// Drop all Note docs:
+// (passing a trivial filterObj since it won't be used)
+// Dao.dropDocsOfModel('Note', {'a': 1}, true);
+
 
 // obtain the port to run the Express server on:
 const PORT = ENVIRON.PORT;
@@ -45,12 +116,46 @@ const PORT = ENVIRON.PORT;
 const app = express();
 
 
+// use to allow cross-origin resource sharing during development:
+if (process.env["NODE_ENV"] === "development") {
+    console.log('enabling CORS during development, for server comms (localhost :3000 <-> :5000)');
+    app.use(cors());
+}
+// TODO -> just make sure CORS is off in Production environment (it should be)
+
+
 
 
 
 
 // use to parse body contents in JSON requests (this replaced 'bodyparser')
 app.use(express.json());
+
+
+// moved mock POST req response method to here, so that the static file serving routes don't 
+// usurp the endpoint call and try to serve React page files.
+// TODO -> should async be there below in the POST method?
+app.post(`/query`, async (req, res) => {
+    // console.log(req);
+    // // parse query from req body and run it using mongoose
+    // let queryData = req.json();
+    // console.log('QUERY DATA:', queryData);
+    // // let query = Dao.buildFilter(queryData);
+    // // let results = Dao.findDocsOfModelObj('Note', query);
+
+    // // res.send(JSON.stringify({'result': results}));
+
+    const resData = await Dao.findDocsByModelName('Note', {_id: {$exists: true}});
+    
+    let data = JSON.stringify(resData);
+    console.log(`response data before sending to front end: ${data}`);
+
+    // // TODO, for now, test sending all docs from a Collection:
+    res.send(data);
+
+    // res.send(JSON.stringify({'response': 'hello'}));
+
+});
 
 
 
@@ -65,8 +170,6 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "./reactfrontend/testprojectfrontend", "build")));
 app.use(express.static("public"));
 
-// use to allow cross-origin resource sharing during development:
-app.use(cors());
 
 
 
@@ -97,19 +200,13 @@ app.post('/retrievenotes', (req, res) => {
 // 
 
 app.get('/usersnotes', (req, res) => {
-    let result = Dao.findDocsOfModel('Note', where({'author': 'JMorrison'})).toArray();
+    let result = Dao.findDocsOfModelObj('Note', where({'author': 'JMorrison'})).toArray();
 
     res.send(JSON.stringify({'result': result}));
 });
 
-app.post('/query', (req, res) => {
-    // unpack query and run it using mongoose
-    let queryData = req.json();
-    console.log(queryData);
-    let query = Dao.buildFilter(queryData);
-    let results = Dao.findDocsOfModel('Note', query);
-    res.send(JSON.stringify({'result': results}));
-});
+
+
 
 // 
 
