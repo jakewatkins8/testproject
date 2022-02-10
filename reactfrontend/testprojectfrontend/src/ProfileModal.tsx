@@ -10,46 +10,14 @@ interface ProfileModal {
 }
 
 
-const ProfileModal = (prop: { currentUser : string, modalClosed: Function, selectedUser: Function }) => {
-
-    const [users, setUsers] = useState([]);
-
-    const [modalStyle, setModalStyle] = useState({});
-    
-    useEffect(() => getUserList(), []);
+const ProfileModal = (prop: { users: Object[], currentUser : string, modalClosed: Function, selectedUser: Function }) => {
 
 
-    // update style for animation (?)
+
     useEffect(() => {
-        
-        setModalStyle({
-            transform: 'scale(1)',
-            opacity: '1'
-        });
 
     }, []);
 
-
-    // how to dismiss the modal? maybe just a close button for now.
-    const handleClose = (event: Event) => {
-
-    };
-
-    // method to query MongoDB for all users, to render the list so it can be selected from
-    const getUserList = () => {
-
-// TODO -> change to actually query DB
-// dummy data:
-        const usersFromDb = [
-            [{'username': 'dog'}], 
-            [{'username': 'cat_sitter'}], 
-            [{'username': 'software_engr'}]
-    ];
-
-        setUsers(() => usersFromDb.map(row => row[0]['username']));
-
-        console.log('Users array, after DB request:', users);
-    };
 
     // TODO TSX - type of event?
     // method to receive which user was selected:
@@ -64,21 +32,27 @@ const ProfileModal = (prop: { currentUser : string, modalClosed: Function, selec
         prop.modalClosed(event);
     };
 
-    // method to request a given user's notes from MongoDB via the Express REST API
-    const requestUserNotes = () => {};
+    const currentUserNameStyle = {
+        backgroundColor: '#bbfff0',
+        // color: 'white'
+    }
+
 
     return (
-        <div style={modalStyle} className="profileModal">
+        <div className="profileModal">
             <button onClick={handleModalClose} className="modalClose">
                 <span>✕</span>
             </button>
             <p>Select a user profile to load from the list below.</p>
             <ol>
-                {users.map(userName => <li key={uuidv4()}>
-                                        <button name={userName} onClick={handleLoadUserSelect}>
-                                            {userName}
-                                        </button>
-                                    </li>)}
+                {prop.users.map(user => {
+                    let isCurrentUser = user['userName'] === prop.currentUser;        
+                return (<li key={uuidv4()}>
+                        <button name={user['userName']} style={isCurrentUser ? currentUserNameStyle : null} disabled={isCurrentUser ? true : false} onClick={handleLoadUserSelect}>
+                            {user['userName']}{isCurrentUser && (' (Current)')}
+                        </button>
+                        </li>);
+                                    })}
 
             </ol>
         </div>

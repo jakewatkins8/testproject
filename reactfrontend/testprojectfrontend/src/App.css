@@ -248,16 +248,16 @@ button:hover {
 }
 
 .queryBox {
-  /* position: absolute;
-  top: 83px; */
-  /* width: 74%; */
+  position: relative;
   height: 100%;
   background-color: #00795a;
 
-
-  z-index: 999;
+  width: 100%;
+  /* z-index: 999; */
   border-radius: 5px;
 }
+
+
 
 .queryBox {
   display: flex;
@@ -279,6 +279,12 @@ button:hover {
 
 }
 
+.queryBox .middleRow, .queryBox .bottomRow {
+  justify-content: center;
+}
+
+
+
 select, input {
   position: relative;
   margin: 0.4em;
@@ -292,35 +298,128 @@ select, input {
 }
 
 .queryRow {
-  width: 70%;
+  position: relative;
+  width: 96%;
   background-color: #cc7d22;
   border-radius: 15px;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 0 0.5em 0 0.5em;
+
 }
 
-.queryRow .toggleCondition {
-  width: 23px;
-  height: 23px;
-  position: relative;
-  left: 3px;
-  top: 4px;
+.chained {
+margin-top: 1em;
 }
 
 .queryRow label {
   position: absolute;
-  /* left: -190px; */
-  color: white;
-  /* top: 3px; */
-  background-color: #cc7d22;
-  height: 2.5em;
-  border-radius: 15px;
-  padding-right: 1.5em;
-  padding-left: 0.3em;
+  left: 2px;
+  width: 10em;
+  height: 90%;
+  text-align: left;
+  background-color: #76e5cb;
+  border-radius: 10px;
+  padding: 0 0.2em 0 3em;
+  z-index: 1000;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom:  0.2em;
+  transition-property: none;
+  transition-property: transform;
+  transition: 0.3s;
+
+  border: 2px solid black;
+}
+
+.queryRow label:hover {
+  background-color: #00ffcc;
+
+
+  cursor: pointer;
+
+}
+
+input, select {
+  border: solid black 2px;
+}
+
+.toggleCondition {
+  margin: 0;
+  width: 25px;
+  height: 25px;
+  position: relative;
+  /* bottom: 2px; */
+  /* left: 3px;
+  top: 4px; */
+  appearance: none;
+  background-color: white;
+  border: solid black 2px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  padding-bottom: 0.3em;
+  z-index: 1001;
 }
+
+.toggleCondition:checked {
+/* background-color: rgb(246, 255, 118); */
+background-color: #00ffcc;
+}
+
+.toggleCondition:before, .toggleCondition:after {
+
+  content: '';
+  position: absolute;
+  width: 3px;
+  height: 90%;
+  background-color: black;
+  border-radius: 2px;
+
+
+  transition: 0.1s;
+ 
+
+}
+
+
+.toggleCondition:after {
+  transform: scale(0.01) rotate(45deg);
+}
+
+.toggleCondition:before {
+  transform: scale(0.01) rotate(-45deg);
+}
+
+.toggleCondition:checked:before, .toggleCondition:checked:after {
+
+  content: '';
+  position: absolute;
+  width: 3px;
+  height: 90%;
+  background-color: black;
+
+  transition: 0.2s;
+ 
+
+}
+
+.toggleCondition:checked:after {
+  transform: rotate(45deg);
+}
+
+.toggleCondition:checked:before {
+  transform: rotate(-45deg);
+}
+
+
 select, input {
   font-family: 'Outfit', sans-serif;
 }
@@ -342,7 +441,7 @@ select, input {
 
 .infoBar {
   font-size: 1.2em;
-  height: 33%;
+  height: 120px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
@@ -357,11 +456,18 @@ select, input {
   /* border: solid 2px black; */
   /* border-width: 0 0 2px 0;  */
 
-  color: white;
+  color: rgb(36, 36, 36);
 
   /* background-color: rgb(74, 84, 94); */
   background-color: #00965c;
 
+
+}
+
+.infoBar p {
+  margin: 0;
+  font-size: 0.8em;
+  padding: 0.5em;
 }
 
 .infoI {
@@ -538,7 +644,7 @@ select, input {
         }
         .infoBar {
           font-size: 1.0em;
-          height: 20%;
+          height: 120px;
           display: flex;
         }
 

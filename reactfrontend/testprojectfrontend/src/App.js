@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import './App.css';
 import { REACT_APP_SERVER_PATH } from './environment';
 
@@ -22,7 +22,7 @@ import ModalBackgroundDim from "./ModalBackgroundDim.jsx";
 import { Query } from "mongoose";
 import QueryStatement from "./QueryStatement.jsx";
 
-import { fetchAllUsers, getUserNotes } from "./userAPIrequests.js";
+import { fetchAllUsers, getUserNotes } from "./APIrequests.js";
 
 
 
@@ -32,6 +32,10 @@ function App() {
 
 
   const [users, setUsers] = useState([]);
+
+
+  const [usersLoaded, setUsersLoaded] = useState(false);
+
   const [currentUserName, setCurrentUserName] = useState('');
 
   // Fetch and load list of users from database
@@ -72,22 +76,26 @@ function App() {
 }, []);
 
 // load notes for selected user:
-// useEffect(() => {
-
-//   try {
-//     const loadUserNotes = async () => {
-//       const userNotes = await getUserNotes(currentUserName);
-//       setNotes(userNotes);
-//     };
-
-//     loadUserNotes();
-//   }
-//   catch (error) {
-//     console.log(`an error occured while trying to fetch the list of notes for the current user: ${error}`)
-//   }
+useEffect(() => {
 
 
-// }, [currentUserName]);
+  const abortController = new AbortController();
+
+
+  try {
+    const loadUserNotes = async () => {
+      const userNotes = await getUserNotes(currentUserName, abortController);
+      setNotes(userNotes);
+    };
+
+    loadUserNotes();
+  }
+  catch (error) {
+    console.log(`an error occured while trying to fetch the list of notes for the current user: ${error}`)
+  }
+
+
+}, [currentUserName]);
 // ^^^ the above is a problem probably bc it's not mounted when first called.
 // how to only call AFTER it's ready?
 
@@ -129,43 +137,14 @@ function App() {
   });
 
 
-  // trivial state object that is used to test and confirm a state update when a response from the Express API server is received:
-  const [contents, setContents] = useState("");
-
-
-
 
   const [info, setInfo] = useState("");
   // This is test info for the info bar.
 
 
 
-  // const [tipDisplayed, setTipDisplayed] = useState(false);
-
-  // const handleEditToolTip = (displayed) => setTipDisplayed(displayed);
-
-
   const [profileModalActive, setProfileModalActive] = useState(false);
 
-
-
-  // TODO: below, for now: maybe use State - BUT, to maintain auth context for anything else that is finer grain:
-  // need to use a context/state mgmt solution like Redux or React Context API (useContext)
-  // using State here because the implementation of a context solution is important, but not
-  // the main point of this part of the project. 
-  // The objectives are to practice writing TypeScript, and set up communication with a Mongo database.
-
-
-  const getCurrentUserName = () => currentUserName;
-
-  // array to be used as a backing list for the "notes" state object, to help with keeping the
-  // note list data the same as the note list rendered.
-  // (currently hardcoded to load the first list of notes from notelists.js)
-  // TODO make currentList stateful after setting up basic user accounts, or similar.
-  
-  // currently this is hard coded. TODO <----
-  // let currentList = [];
-  // console.log(currentList);
 
   // state object to hold the state of the note objects being rendered:
 const [notes, setNotes] = useState([]);
@@ -225,20 +204,6 @@ useEffect(() => {
 
   // }, [currentUserName]);
 
-  const handleOops = (e) => {
-
-        // let list = findListByUser(currentUserName);
-
-    // console.log(list);
-
-    let list = fetch(`${REACT_APP_SERVER_PATH}/`)
-
-    // having obtained the 2D array/object of "rows" of list objects for the current user,
-    // sets state of the notes object as the 2D collection:
-    setNotes(list);
-
-  };
-
 
   // function stub to be used to query the backend and retrieve all of a given user profile's notes:
   // TODO finish this functionality using a MongoDB instance (likely also using the Mongoose ORM)
@@ -280,9 +245,30 @@ useEffect(() => {
    
   };  
 
+  const showNoteInfo = (dbId) => {
+    console.log(dbId);
+
+    let noteObj = notes.find(note => note['_id'] === dbId);
+
+    let dateCreated = new Date(noteObj.dateCreated);
+    let dateModified = new Date(noteObj.dateModified);
+
+    let infoStr = `Created on ${dateCreated.getMonth()+1}-${dateCreated.getDate()}-${dateCreated.getFullYear()}
+    at ${dateCreated.toLocaleTimeString()};
+    Last modified on ${dateModified.getMonth()+1}-${dateModified.getDate()}-${dateModified.getFullYear()}
+    at ${dateModified.toLocaleTimeString()}`;
+    setInfo(infoStr);
+  };
+
+
+  const hideNoteInfo = () => {
+
+    setInfo('');
+  };
+
   const addNewNote = () => {
 
-    handleOops();
+
 
     // if (Object.keys(notes).length === 10) {
     //   // max reached.
@@ -439,7 +425,7 @@ useEffect(() => {
               <div className="rightColumnButtons">
                 <button onClick={addNewNote}>New note</button>
                 <button onClick={loadUserProfile} type="submit">
-                    Load existing profile
+                    Load user profile
                 </button>
               </div>
               
@@ -462,8 +448,9 @@ useEffect(() => {
               </div>
               <div className="bottomRow">
                 <QueryStatement isChainedStatement /> 
-                <button type='submit'>Run query</button>
+
               </div>
+              <button type='submit'>Run query</button>
             </div>
             </form>)
             }
@@ -476,10 +463,10 @@ useEffect(() => {
       </header>
 
       {/* handleTipDisplay={handleEditToolTip}  */}
-      <NoteContainer editNote={noteEdit} deleteNote={noteDelete} notes={notes}/>
+      <NoteContainer noteInfo={showNoteInfo} noteInfoOut={hideNoteInfo} editNote={noteEdit} deleteNote={noteDelete} notes={notes}/>
 
 
-      {profileModalActive && <ProfileModal modalClosed={handleModalClosed} selectedUser={handleSelectedUser} currentUser={currentUserName}/>}
+      {profileModalActive && <ProfileModal users={users} modalClosed={handleModalClosed} selectedUser={handleSelectedUser} currentUser={currentUserName}/>}
 
 
 

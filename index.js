@@ -26,17 +26,17 @@ Dao.initializeDbStructure();
 
 const populateInitialDbData = async () => {
 
-    if (await Dao.findDocsByModelName('Note', {}, true)) {
-        console.log(`DB already has at least one ${modelName} document.`);
-        return;
-    } else {
-        // populate with initial dummy dataset:
-        try {
-            const addAll = await Dao.addDocsOfModel('Note', 'User', 'userName', 'AuthorId', dbPopulationData);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    // if (await Dao.findDocsByModelName('Note', {}, true)) {
+    //     console.log(`DB already has at least one ${modelName} document.`);
+    //     return;
+    // } else {
+    //     // populate with initial dummy dataset:
+    //     try {
+    //         const addAll = await Dao.addDocsOfModelWithRefs('Note', 'User', 'userName', 'AuthorId', dbPopulationData);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
 
 };
@@ -45,24 +45,24 @@ const populateInitialDbData = async () => {
 
 // adds initial User data to Db 
 // TODO: work on this and set it to only add if 'User" collection does not exist or is empty:
-// Dao.addDocsOfModel('User', 
-// [{userName: 'JMorrison'}, 
-// {userName: 'NTesla'}, 
-// {userName: 'BRattfink'}] 
+// const addUsers = await Dao.addDocsOfModel('User', 
+// [{userName: 'JMorrison', noteColor: '#FCFDAF'}, 
+// {userName: 'NTesla', noteColor: '#b5ffbe'}, 
+// {userName: 'BRattfink', noteColor: '#c2faff'}] 
 // );
 
 // iterates across data to add to db, and assigns _id fields from the database for the respective authors:
 // signature structure: (modelName, refModelName, commonFieldName, refField, docs)
-// const addAll = await Dao.addDocsOfModel('Note', 'User', 'userName', 'AuthorId', dbPopulationData);
+// const addAll = await Dao.addDocsOfModelWithRefs('Note', 'User', 'userName', 'AuthorId', dbPopulationData);
+// const refFields = ['AuthorId', 'colorName'];
 
-
-// Drop all Note docs:
+// Drop all Note & User docs:
 // (passing a trivial empty filterObj param since it won't be used)
 // Dao.dropDocsOfModel('Note', {}, true);
+// Dao.dropDocsOfModel('User', {}, true);
 
 
-// add all documents using the data in the dbPopulationData.js file's object:
-// const addAll = await Dao.addDocsOfModel('Note', 'User', 'userName', 'AuthorId', dbPopulationData);
+
 
 // err on the two test queries below: """cannot use $and with text.""" Maybe you use $where or $regex.
 // const findUsers = await Dao.findDocsByModelName('User', {userName: {$and: [{$neq: 'NTesla'}, {$neq: 'JMorrison'}]}});
@@ -94,8 +94,7 @@ const populateInitialDbData = async () => {
 // Testing dropping specific note docs:
 // Dao.dropDocsOfModel('Note', {userName: "JMorrison", content: "dziad ufolud"});
 
-// Testing if the method will throw an error msg in response to dropping a non-existent model.
-// Dao.dropDocsOfModel('UUUUser');
+
 
 // Drop all Note docs:
 // (passing a trivial filterObj since it won't be used)

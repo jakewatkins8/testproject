@@ -29,11 +29,16 @@ const QueryStatement = (props) => {
 
     };
 
+    const hideLabelStyle = {
+        opacity: 0,
+        transform: 'scale(0.01)'
+    }
 
-    return (<div className="queryRow">
+
+    return (<div className={props.isChainedStatement ? 'chained queryRow' : 'queryRow'}>
     {props.isChainedStatement ? <>
-    <label htmlFor="toggleCondition">check to use 2nd condition:</label>
-    <input onChange={handleChecked} type="checkbox" name="toggleCondition" className="toggleCondition"></input>
+
+    <input id="secondCond"  onChange={handleChecked} type="checkbox" name="toggleCondition" className="toggleCondition"></input>
 
     <select disabled={!secondCondition}>                
         <option value="and">and</option>
@@ -58,6 +63,7 @@ const QueryStatement = (props) => {
     </>}
     </select> 
     <input disabled={!secondCondition} type='text'></input>
+    <label style={secondCondition ? hideLabelStyle : {}} htmlFor="secondCond">use 2nd condition</label>
     </> : <>
 
     <select onChange={handleAttrChange}>

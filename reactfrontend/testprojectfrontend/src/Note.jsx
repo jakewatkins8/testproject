@@ -8,6 +8,9 @@ const Note = (props) => {
     // const [isReadOnly, setIsReadOnly] = useState(true);
     const [isFocused, setIsFocused] = useState(false);
     const [isNew, setIsNew] = useState(props.userCreated);
+
+
+    const [noteColor, setNoteColor] = useState(props.noteColor);
     
     // const [toolTipDisplayed, setToolTipDisplayed] = useState(false);
 
@@ -54,7 +57,7 @@ const Note = (props) => {
 
     const handleEditClick = (event) => {
 
-        // attach noteId to the event:
+
         event = attachNoteUUID(event);
 
         console.log('edit handler at note level:', event.target, 'noteId for event', event.noteId);
@@ -92,13 +95,32 @@ const Note = (props) => {
 
     };
 
-    const handleInfoClick = (event) => {
+    const handleMouseIn = (event) => {
 
+
+        // hand note's mongoDB id up:
+        console.log(props.dbId);
+
+
+        // I don't think you can even add this UUID property:
+        
+        // TODO I am not sure this really works.
         event = attachNoteUUID(event);
 
-        console.log('info handler at note level running');
+        // console.log('info handler at note level running');
 
-        props.noteInfo(event);
+        // console.log(event.noteId);
+
+        props.noteInfo(props.dbId);
+    };
+
+    const handleMouseOut = (event) => {
+
+        // hand note's mongoDB id up:
+        console.log(props.dbId);
+
+        props.noteInfoOut(props.dbId);
+
     };
 
     // helper function to attach note UUID for any of the click handlers above.
@@ -155,7 +177,7 @@ const Note = (props) => {
 
 
     return (
-    <div className="note">
+    <div onMouseEnter={handleMouseIn} onMouseLeave={handleMouseOut} style={{backgroundColor: noteColor}} className="note">
         <div className="noteHotBar">
         {/* <button onClick={handleInfoClick}>info</button> */}
         <button onClick={handleEditClick} className="edit" style={ isFocused ? focusStyle : {} }>edit</button>

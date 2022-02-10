@@ -26,10 +26,11 @@ const NoteContainer = (props) => {
     });
 
 
-    let messageFadeTimer;
-    let imageFadeTimer;
 
 useEffect(() => {
+
+    console.log(`notes object as received by note container ${JSON.stringify(props.notes)}`);
+    
     if (Object.keys(props.notes).length === 0) {
         setMessageStyle({
             opacity: '1'
@@ -48,14 +49,7 @@ useEffect(() => {
     }
 }, [props.notes]);
 
-// useEffect(() => {
-//     if (messageOpacity === '1') {
-//         setImageOpacity('1');
-//     }
-//     else if (imageOpacity !== '0') {
-//         setImageOpacity('0');
-//     }
-// }, [messageOpacity]);
+
 
 const handleEditNote = (event) => {
     console.log(`noteContainer level: note assoc. w/ ${event.noteId} has been selected for editing`);
@@ -67,9 +61,16 @@ const handleDeleteNote = (event) => {
     props.deleteNote(event);
 };
 
-const handleNoteInfo = (event) => {
+const handleNoteInfo = (dbId) => {
 
-    props.noteInfo(event);
+
+    
+    props.noteInfo(dbId);
+};
+
+const handleInfoOut = (dbId) => {
+
+    props.noteInfoOut(dbId);
 };
 
 // const handleEditToolTip = displayed => {props.handleTipDisplay(displayed)};
@@ -79,7 +80,7 @@ return (
     
     <div className="noteContainer">
         {/* below statement is debug; I think the notes may be unmounting early? */}
-        {console.log(Object.keys(props.notes), Object.keys(props.notes).length)}
+        {/* {console.log(Object.keys(props.notes), Object.keys(props.notes).length)} */}
         {Object.keys(props.notes).length === 0 && (<>
             <div className="noneMessage" style={messageStyle}>
                 <p>
@@ -98,23 +99,12 @@ return (
 
         // drill down one array level into the note object:
         const noteData = note;
-
-{/* let newRandKey = uuidV4();
-key={newRandKey} noteKey={newRandKey}  */}
-{/* testing using a random UUID here in the render: */}
-{/* TODO -> does LOSING the old initial UUID cause any problems as long as React knows which is which? */}
-{/* maybe not. maybe if it were an issue, you could also port over a different unique identifier from the DB. */}
-{/* changing the tag from key={noteData.noteKey}, and noteKey={noteData.noteKey} to something else too */}
-{/* handleToolTip={handleEditToolTip} */}
-
-          return (<Note content={noteData.note} key={uuidV4()} noteKey={noteData.noteKey}
+// TODO add ID here? or...?
+          return (<Note content={noteData.content} dbId={noteData['_id']} key={uuidV4()} noteKey={noteData.noteKey}
           editNote={handleEditNote} deleteNote={handleDeleteNote} 
-           noteInfo={handleNoteInfo} />);
+           noteInfo={handleNoteInfo} noteInfoOut={handleInfoOut} noteColor={noteData.noteColor}/>);
         })
         }
-
- 
-        
     </div>
 );
 

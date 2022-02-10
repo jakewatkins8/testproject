@@ -90,7 +90,8 @@ const DataAccessObject = () => {
             modelName = 'User';
 
             let UserModelSchema = new Schema({
-                userName: String},
+                userName: String,
+            noteColor: String},
                 {strictQuery: true});
             let UserModel = mongoose.model(modelName, UserModelSchema);
 
@@ -104,7 +105,8 @@ const DataAccessObject = () => {
                 userName: String,
                 content: String,
                 dateCreated: Number,
-                dateModified: Number 
+                dateModified: Number,
+                noteColor: { type: Schema.Types.String, ref: 'User'} 
             }, 
             {strictQuery: true});
 
@@ -120,7 +122,7 @@ const DataAccessObject = () => {
 
         },
 
-        // 1st overloaded default version of method that adds an array of 1 or more User or Note documents to the DB.
+        // 1st version of add method that adds an array of 1 or more User or Note documents to the DB.
         // @param: TODO (docs : User[] XOR Note[]) - an array of at least one Note or one User. 
         // The array must contain either only Note objects or only User objects.
         // @param modelName: model of docs to be added 
@@ -142,7 +144,7 @@ const DataAccessObject = () => {
 
         },
 
-        // 2nd overloaded version of method that also accepts a second model parameter.
+        // 2nd version of add method that also accepts a second model parameter.
         // the 2nd model parameter is to create manual references in the Db between the
         // documents being added, and their 'parent' documents. The _id of the 'parent' docs
         // will be added to the new docs in a reference field.
@@ -150,8 +152,8 @@ const DataAccessObject = () => {
         // @param refModelName: model of docs that will be bound to new docs using a manual _id reference
         // @param commonField: a field that the two documents share - this field is compared for equality,
         //      so that the right id will be assigned
-        // @param refField: field on the new docs that will bind the new and existing docs together. (This field should be the refModel's _id.)
-        addDocsOfModel: async function(modelName, refModelName, commonFieldName, refField, docData) {
+        // @param refField: array of fields on the new docs that will bind the new and existing docs together. (This field should be the refModel's _id.)
+        addDocsOfModelWithRefs: async function(modelName, refModelName, commonFieldName, refField, docData) {
             if (docData.length < 1) {
                 console.log('Must add at least one object to the database.');
             }
@@ -178,11 +180,15 @@ const DataAccessObject = () => {
                 
                 console.log(`result of refDoc after await op: ${JSON.stringify(refDoc)}`);
                 
+
                 // have to add [0] due to the result from findDocsOfModel being a one-element array with
                 // the object inside:
                 let refValue = refDoc[0]['_id'];
-            
                 singleDocDatapoint[refField] = refValue;
+
+                // add 2nd ref value - note color:
+                let colorRefVal = refDoc[0]['noteColor'];
+                singleDocDatapoint['noteColor'] = colorRefVal;
 
                 console.log(` single doc datapoint after field addition: ${JSON.stringify(singleDocDatapoint)}`);
             }
@@ -373,40 +379,6 @@ const DataAccessObject = () => {
     }); 
 
 };
-
-
-
-//     // method to init. mongo client:
-//     const initMongoClient = function() {
-
-//         client = new MongoClient(dbUri, {
-//             useNewUrlParser: true,
-//             useUnifiedTopology: true
-//         });
-        
-//     };
-
-//     // method to (?) test the db connection?:
-//     const testConnection = function() {
-
-//         client.connect(error => {
-
-//             // TODO -> handle this above error?
-        
-//             client.db('test').collection('devices');
-
-//             console.log('successfully connected to db.')
-        
-//             // TODO perform whatever actions on the collection object here
-        
-//             client.close();
-        
-//         });
-
-//     }
-
-// };
-
 
 
 
