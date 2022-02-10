@@ -12,8 +12,6 @@ import DataAccessObject from "./dataAccessObject.js";
 // was used to add all 'Note' docs to DB:
 import { dbPopulationData } from './dbPopulationData.js';
 
-
-
 // console.log('dbUri', DAO.dbUri);
 
 
@@ -136,7 +134,11 @@ app.use(express.json());
 // usurp the endpoint call and try to serve React page files.
 // TODO -> should async be there below in the POST method?
 app.post(`/query`, async (req, res) => {
-    // console.log(req);
+
+
+    
+
+    console.log(`Request body ${JSON.stringify(req.body)}`);
     // // parse query from req body and run it using mongoose
     // let queryData = req.json();
     // console.log('QUERY DATA:', queryData);
@@ -145,7 +147,7 @@ app.post(`/query`, async (req, res) => {
 
     // // res.send(JSON.stringify({'result': results}));
 
-    const resData = await Dao.findDocsByModelName('Note', {_id: {$exists: true}});
+    const resData = await Dao.findDocsByModelName(req.body['modelName'], req.body['criteria']);
     
     let data = JSON.stringify(resData);
     console.log(`response data before sending to front end: ${data}`);
@@ -153,9 +155,20 @@ app.post(`/query`, async (req, res) => {
     // // TODO, for now, test sending all docs from a Collection:
     res.send(data);
 
-    // res.send(JSON.stringify({'response': 'hello'}));
+    // Wow, my stars, it works.
+
 
 });
+
+
+// app.get('/users', async ((req) => {
+
+//     // TODO - in production, I guess just disable CORs - so that requests from any other top level domain
+//     // will be ignored.
+//     if (req) {}
+
+//     res.send(data);
+// }));
 
 
 

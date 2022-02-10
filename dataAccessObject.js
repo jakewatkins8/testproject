@@ -263,11 +263,15 @@ const DataAccessObject = () => {
 
                 const modelObj = models[modelObjName];
 
+                // use variable to hold the async find operations below:
+                let findAttempt;
+
                 if (returnAllOfModel) {
-                    const findAttempt = await modelObj.find();
+                    findAttempt = await modelObj.find();
                 }
                 else {
-                    const findAttempt = await modelObj.find(filterObj);
+                    findAttempt = await modelObj.find(filterObj);
+                    console.log(`result of find attempt: ${findAttempt}`);
                 }
                 // something about the async control flow may be making findAttempt basically empty at this point:
                 console.log(`result of find attempt: ${findAttempt}`);

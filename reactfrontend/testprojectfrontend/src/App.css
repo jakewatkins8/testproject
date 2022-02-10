@@ -308,8 +308,8 @@ select, input {
 .queryRow label {
   position: absolute;
   /* left: -190px; */
-  /* top: 3px; */
   color: white;
+  /* top: 3px; */
   background-color: #cc7d22;
   height: 2.5em;
   border-radius: 15px;

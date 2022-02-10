@@ -1,0 +1,54 @@
+.errorScreen {
+
+    font-family: 'Terminal', monospace;
+    font-size: 0.9em;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: flex-start;
+    color: white;
+
+
+    background-color: blue;
+}
+
+
+.errorScreen .error {
+    padding: 1em;
+    padding-left: 3em;
+    border: 1px solid white;
+    border-width: 1px 0 1px 0;
+    font-size: 1.2em;
+
+}
+
+
+.errDialogueBox {
+    margin-left: 4em;
+    height: 40%;
+    margin-bottom: 0;
+}
+
+
+.errDialogueBox .linkBack {
+    font-size: 1.2em;
+    width: 60%;
+}
+
+.errDialogueBox:last-child {
+    font-size: 1.1em;
+    color: yellow;
+}
+
+a {
+    color: lime;
+    text-decoration: underline;
+    background-color: darkblue;
+}
+
+a:hover {
+    color: yellow;
+    background-color: rgb(0, 0, 66);
+}

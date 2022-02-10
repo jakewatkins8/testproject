@@ -22,11 +22,97 @@ import ModalBackgroundDim from "./ModalBackgroundDim.jsx";
 import { Query } from "mongoose";
 import QueryStatement from "./QueryStatement.jsx";
 
+import { fetchAllUsers, getUserNotes } from "./userAPIrequests.js";
+
 
 
 
 
 function App() {
+
+
+  const [users, setUsers] = useState([]);
+  const [currentUserName, setCurrentUserName] = useState('');
+
+  // Fetch and load list of users from database
+  useEffect(() => {
+
+    // use AbortController and pass its signal property to the fetch request method,
+    // as it will be used as an option for the fetch request:
+    const abortController = new AbortController();
+
+
+    try {
+      // declare inner function to use async:
+        const getUsers = async () => {
+          const userData = await fetchAllUsers(abortController);
+
+          setUsers(userData);
+          setCurrentUserName(userData[0]['userName']);
+
+      }
+
+      getUsers();
+    }
+    catch (error) {
+      console.log(`an error occured while trying to fetch the list of users from the DB: ${error}`)
+    }
+
+    // useEffect cleanup hook to abort the fetch if the component is unmounted:
+    return () => {
+      console.log('the component is unmounted. aborting POST request.')
+      abortController.abort();
+    }
+
+    // TODO I think I am supposed to add a cancel/cleanup function within the return value of useEffect here,
+    // I think you are supposed to do that anytime you call an asynchronous function inside of
+    // useEffect.
+    // if not done, you may have old async requests returning "late" on the UI and causing problems.
+    // reference article on this topic: https://academind.com/tutorials/useeffect-abort-http-requests 
+}, []);
+
+// load notes for selected user:
+// useEffect(() => {
+
+//   try {
+//     const loadUserNotes = async () => {
+//       const userNotes = await getUserNotes(currentUserName);
+//       setNotes(userNotes);
+//     };
+
+//     loadUserNotes();
+//   }
+//   catch (error) {
+//     console.log(`an error occured while trying to fetch the list of notes for the current user: ${error}`)
+//   }
+
+
+// }, [currentUserName]);
+// ^^^ the above is a problem probably bc it's not mounted when first called.
+// how to only call AFTER it's ready?
+
+
+      // TODO come back and understand what is wrong here:
+    // appears to be likely use and/or placement of async / await
+
+    // const result = async () => {
+    //   try { 
+    //     const data = await fetch(`${REACT_APP_SERVER_PATH}/query`, {
+    //       "method": "POST",
+    //       "body": JSON.stringify(queryData),
+    //       "Headers": { "Content-Type": "application/json" }
+    //     });
+
+    //     console.log(data);
+
+    //     return data;
+    //   }
+    //   catch (error) {
+    //     console.log(`Something went wrong retrieving the list of users from the database: ${error}`);
+    //   }
+    // };
+
+
 
 
 
@@ -68,7 +154,7 @@ function App() {
   // using State here because the implementation of a context solution is important, but not
   // the main point of this part of the project. 
   // The objectives are to practice writing TypeScript, and set up communication with a Mongo database.
-  const [currentUserName, setCurrentUserName] = useState("dog");
+
 
   const getCurrentUserName = () => currentUserName;
 
@@ -139,6 +225,20 @@ useEffect(() => {
 
   // }, [currentUserName]);
 
+  const handleOops = (e) => {
+
+        // let list = findListByUser(currentUserName);
+
+    // console.log(list);
+
+    let list = fetch(`${REACT_APP_SERVER_PATH}/`)
+
+    // having obtained the 2D array/object of "rows" of list objects for the current user,
+    // sets state of the notes object as the 2D collection:
+    setNotes(list);
+
+  };
+
 
   // function stub to be used to query the backend and retrieve all of a given user profile's notes:
   // TODO finish this functionality using a MongoDB instance (likely also using the Mongoose ORM)
@@ -181,6 +281,8 @@ useEffect(() => {
   };  
 
   const addNewNote = () => {
+
+    handleOops();
 
     // if (Object.keys(notes).length === 10) {
     //   // max reached.
@@ -309,6 +411,8 @@ useEffect(() => {
       {profileModalActive && <ModalBackgroundDim onModalBgClicked={handleModalBgClick}/>}
 
       <div className="appWindow">
+        {/* debug: */}
+        {JSON.stringify(users)}
       <header className="App-header">
 
         <div className="titleNote">
@@ -317,8 +421,10 @@ useEffect(() => {
           </div>
         </div>
         <nav className="navColumn">
-          <div className="userInfo">
-            <p>Current user profile:&nbsp;</p> <p>{currentUserName}</p>
+          <div className="userInfo">{currentUserName === '' ? <p>Loading user profile...</p> : 
+                      <><p>Current user profile:&nbsp;</p><p>{currentUserName}</p></>
+          }
+
           </div>
           {/* the regular header when query builder is not open: */}
             {!queryExpanded && (<>
